@@ -15,9 +15,17 @@
   --ok:#1FA36B; --ok-bg:#DDF7EA; --bad:#E0444E; --bad-bg:#FFE3E5;
   --gold:#F2B233;
   --c:#6A4C93; --on-c:#fff;
+  --shadow:#1D2356; --ans-bg:#FFFBEA; --locked:#EEF2FA; --locked-line:#AEB6D4; --faint:#B8BED8; --star-off:#E3E7F3; --doodle:#8C97CF; --road:#E4EAF8;
   --display:"Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
   --body:"Nunito", "Segoe UI", system-ui, sans-serif;
   --hand:"Caveat", "Comic Sans MS", cursive;
+}
+body.night{
+  color-scheme: dark;
+  --paper:#131A3D; --grid:#1F2858; --margin:#7A3B5C;
+  --ink:#EEF1FF; --ink-soft:#A8B0DD; --card:#1D2552; --shadow:#05081C;
+  --ok-bg:#12402F; --bad-bg:#4B1D2A; --ans-bg:#262F66; --locked:#232B57; --locked-line:#05081C;
+  --faint:#4E5790; --star-off:#34407A; --doodle:#4D5AA0; --road:#28316A;
 }
 *{box-sizing:border-box}
 html,body{min-height:100%}
@@ -43,16 +51,16 @@ button{font:inherit; color:inherit; cursor:pointer}
 .brand-name{font-family:var(--display); font-size:28px; letter-spacing:.5px; line-height:1}
 .brand-name small{display:block; font-family:var(--body); font-weight:800; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft); margin-top:3px}
 .tools{display:flex; gap:8px; align-items:center}
-.chip-btn{border:2.5px solid var(--ink); background:var(--card); border-radius:999px; padding:6px 12px; font-weight:800; font-size:14px; box-shadow:2px 2px 0 var(--ink)}
+.chip-btn{border:2.5px solid var(--ink); background:var(--card); border-radius:999px; padding:6px 12px; font-weight:800; font-size:14px; box-shadow:2px 2px 0 var(--shadow)}
 .chip-btn:active{transform:translate(2px,2px); box-shadow:none}
 
 /* ---------- sticker primitives ---------- */
-.sticker{background:var(--card); border:3px solid var(--ink); border-radius:18px; box-shadow:5px 5px 0 var(--ink)}
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:3px solid var(--ink); border-radius:14px; padding:12px 20px; font-weight:900; font-size:17px; background:var(--c); color:var(--on-c); box-shadow:4px 4px 0 var(--ink); transition:transform .08s, box-shadow .08s}
-.btn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--ink)}
-.btn:active{transform:translate(3px,3px); box-shadow:1px 1px 0 var(--ink)}
+.sticker{background:var(--card); border:3px solid var(--ink); border-radius:18px; box-shadow:5px 5px 0 var(--shadow)}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:3px solid var(--ink); border-radius:14px; padding:12px 20px; font-weight:900; font-size:17px; background:var(--c); color:var(--on-c); box-shadow:4px 4px 0 var(--shadow); transition:transform .08s, box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px); box-shadow:5px 5px 0 var(--shadow)}
+.btn:active{transform:translate(3px,3px); box-shadow:1px 1px 0 var(--shadow)}
 .btn.ghost{background:var(--card); color:var(--ink)}
-.btn[disabled]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:4px 4px 0 var(--ink)}
+.btn[disabled]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:4px 4px 0 var(--shadow)}
 
 /* ---------- home ---------- */
 .hero{display:grid; grid-template-columns:1fr auto; color:var(--ink); gap:24px; align-items:end; margin-bottom:28px}
@@ -63,11 +71,11 @@ button{font:inherit; color:inherit; cursor:pointer}
 .player{padding:16px 18px; display:grid; gap:8px}
 .hero .hello{font-family:var(--hand); font-size:clamp(64px,13vw,132px); font-weight:700; line-height:.95; margin:0 0 14px; overflow-wrap:anywhere; animation:pop .5s both; color:var(--c)}
 .welcome{position:relative; min-height:min(640px, 82vh); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px; padding-block:30px}
-.w-float span{position:absolute; font-family:var(--display); font-size:clamp(22px,4vw,34px); background:var(--c); color:var(--on-c,#fff); border:3px solid var(--ink); border-radius:14px; padding:4px 12px; box-shadow:3px 3px 0 var(--ink); transform:rotate(var(--r)); animation:bob 4s ease-in-out infinite}
+.w-float span{position:absolute; font-family:var(--display); font-size:clamp(22px,4vw,34px); background:var(--c); color:var(--on-c,#fff); border:3px solid var(--ink); border-radius:14px; padding:4px 12px; box-shadow:3px 3px 0 var(--shadow); transform:rotate(var(--r)); animation:bob 4s ease-in-out infinite}
 .w-float span:nth-child(2){animation-delay:-1s}.w-float span:nth-child(3){animation-delay:-2s}.w-float span:nth-child(4){animation-delay:-3s}
 @keyframes bob{50%{translate:0 -10px}}
 @media (max-width:560px){ .w-float span{font-size:18px; padding:2px 8px} .w-float span:nth-child(1),.w-float span:nth-child(2){top:-2%} }
-.w-mark{width:96px; height:96px; border-radius:26px; background:var(--ink); color:#fff; display:grid; place-items:center; font-family:var(--display); font-size:68px; transform:rotate(-8deg); box-shadow:6px 6px 0 var(--gold); margin-bottom:14px; animation:pop .5s both}
+.w-mark{width:96px; height:96px; border-radius:26px; background:var(--ink); color:var(--paper); display:grid; place-items:center; font-family:var(--display); font-size:68px; transform:rotate(-8deg); box-shadow:6px 6px 0 var(--gold); margin-bottom:14px; animation:pop .5s both}
 .hello-name{display:inline-block; color:var(--ink); background:linear-gradient(transparent 62%, var(--gold) 62%, var(--gold) 88%, transparent 88%); padding:0 .08em}
 .w-kicker{margin:0; font-weight:900; letter-spacing:.2em; text-transform:uppercase; font-size:13px; color:var(--ink-soft)}
 .w-title{font-family:var(--display); font-weight:400; font-size:clamp(48px,10vw,92px); line-height:.95; margin:0 0 22px}
@@ -86,7 +94,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .tables{display:grid; grid-template-columns:repeat(5, 1fr); gap:18px}
 @media (max-width:760px){ .tables{grid-template-columns:repeat(3, 1fr)} }
 @media (max-width:460px){ .tables{grid-template-columns:repeat(2, 1fr); gap:14px} }
-.tcard{position:relative; aspect-ratio:1/1.12; max-width:100%; border:3px solid var(--ink); border-radius:20px; background:var(--c); color:var(--on-c); box-shadow:5px 5px 0 var(--ink); padding:12px; display:flex; flex-direction:column; justify-content:space-between; text-align:left; transition:transform .12s}
+.tcard{position:relative; aspect-ratio:1/1.12; max-width:100%; border:3px solid var(--ink); border-radius:20px; background:var(--c); color:var(--on-c); box-shadow:5px 5px 0 var(--shadow); padding:12px; display:flex; flex-direction:column; justify-content:space-between; text-align:left; transition:transform .12s}
 .tcard:nth-child(odd){transform:rotate(-1.4deg)}
 .tcard:nth-child(even){transform:rotate(1.2deg)}
 .tcard:hover{transform:rotate(0) translateY(-4px) scale(1.03)}
@@ -95,7 +103,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .pips{display:flex; gap:5px}
 .pip{flex:1; height:9px; border-radius:6px; background:rgba(255,255,255,.35); border:2px solid currentColor; opacity:.9}
 .pip.on{background:currentColor}
-.ribbon{position:absolute; top:-12px; right:-10px; width:46px; height:46px; border-radius:50%; background:var(--gold); border:3px solid var(--ink); display:grid; place-items:center; transform:rotate(14deg); box-shadow:2px 2px 0 var(--ink)}
+.ribbon{position:absolute; top:-12px; right:-10px; width:46px; height:46px; border-radius:50%; background:var(--gold); border:3px solid var(--ink); display:grid; place-items:center; transform:rotate(14deg); box-shadow:2px 2px 0 var(--shadow)}
 .ribbon svg{width:24px; height:24px}
 
 .foot{margin-top:40px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; font-size:14px; color:var(--ink-soft)}
@@ -108,7 +116,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .back{background:none; border:0; font-weight:900; display:inline-flex; gap:6px; align-items:center; padding:6px 0; margin-bottom:10px; color:var(--ink-soft)}
 .back:hover{color:var(--ink)}
 .thead{display:flex; gap:22px; align-items:center; margin-bottom:26px; flex-wrap:wrap}
-.bigseal{width:110px; height:110px; border-radius:28px; background:var(--c); color:var(--on-c); border:3px solid var(--ink); box-shadow:5px 5px 0 var(--ink); display:grid; place-items:center; font-family:var(--display); font-size:68px; transform:rotate(-4deg); flex:none}
+.bigseal{width:110px; height:110px; border-radius:28px; background:var(--c); color:var(--on-c); border:3px solid var(--ink); box-shadow:5px 5px 0 var(--shadow); display:grid; place-items:center; font-family:var(--display); font-size:68px; transform:rotate(-4deg); flex:none}
 .thead h2{font-family:var(--display); font-weight:400; font-size:clamp(34px,6vw,52px); margin:0; line-height:1}
 .thead p{margin:6px 0 0; color:var(--ink-soft); font-size:17px}
 .path{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; position:relative}
@@ -124,7 +132,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .lvl.locked h3,.lvl.locked .n{opacity:.5}
 .lvl .lock{font-weight:800; font-size:13px; color:var(--ink-soft); display:flex; gap:6px; align-items:center}
 .star{width:22px; height:22px}
-.star path{fill:#E3E7F3; stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round}
+.star path{fill:var(--star-off); stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round}
 .star.on path{fill:var(--gold)}
 .cheat{margin-top:28px; padding:18px 20px}
 .cheat-grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:6px 18px; font-family:var(--display); font-size:22px; font-variant-numeric:tabular-nums}
@@ -157,7 +165,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .eq{display:flex; align-items:center; justify-content:center; gap:clamp(8px,2vw,18px); font-family:var(--display); font-size:clamp(40px, 8.5vw, 84px); line-height:1; flex-wrap:wrap; font-variant-numeric:tabular-nums}
 .eq .op{color:var(--c)}
 .eq .fact{min-width:.6em}
-.ans{font:inherit; font-family:var(--display); font-size:inherit; width:2.1em; text-align:center; color:var(--ink); background:#FFFBEA; border:4px solid var(--ink); border-radius:18px; padding:4px 0 8px; box-shadow:inset 0 -6px 0 rgba(29,35,86,.08); caret-color:var(--c)}
+.ans{font:inherit; font-family:var(--display); font-size:inherit; width:2.1em; text-align:center; color:var(--ink); background:var(--ans-bg); border:4px solid var(--ink); border-radius:18px; padding:4px 0 8px; box-shadow:inset 0 -6px 0 rgba(29,35,86,.08); caret-color:var(--c)}
 .ans:focus{outline:none; border-color:var(--c); box-shadow:0 0 0 5px color-mix(in srgb, var(--c) 30%, transparent), inset 0 -6px 0 rgba(29,35,86,.08)}
 .ans.ok{background:var(--ok-bg); border-color:var(--ok)}
 .ans.bad{background:var(--bad-bg); border-color:var(--bad)}
@@ -180,7 +188,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 .side{padding:14px 16px}
 .side h4{margin:0 0 8px; font-family:var(--display); font-weight:400; font-size:22px}
 .side ol{list-style:none; margin:0; padding:0; font-family:var(--display); font-size:20px; font-variant-numeric:tabular-nums}
-.side li{padding:2px 8px; border-radius:8px; color:#B8BED8; display:flex; justify-content:space-between}
+.side li{padding:2px 8px; border-radius:8px; color:var(--faint); display:flex; justify-content:space-between}
 .side li.done{color:var(--ink)}
 .side li.done em{font-style:normal; color:var(--c)}
 .side li.now{background:var(--c); color:var(--on-c)}
@@ -207,7 +215,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 
 /* ---------- diploma ---------- */
 .dip-wrap{display:grid; gap:18px; justify-items:center}
-.diploma{width:100%; max-width:760px; aspect-ratio:1.414/1; background:#FFFDF6; border:3px solid var(--ink); border-radius:6px; box-shadow:8px 8px 0 var(--ink); position:relative; padding:clamp(14px,3vw,26px); color:var(--ink)}
+.diploma{--ink:#1D2356; --ink-soft:#4A5188; width:100%; max-width:760px; aspect-ratio:1.414/1; background:#FFFDF6; border:3px solid var(--ink); border-radius:6px; box-shadow:8px 8px 0 var(--shadow); position:relative; padding:clamp(14px,3vw,26px); color:var(--ink)}
 .diploma .frame{position:absolute; inset:clamp(8px,1.6vw,14px); border:2px solid var(--c); border-radius:4px; outline:6px double var(--c); outline-offset:-12px; pointer-events:none}
 .diploma .inner{position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:clamp(2px,.8vw,8px); padding:clamp(10px,3vw,30px)}
 .diploma .kicker{font-weight:900; letter-spacing:.3em; text-transform:uppercase; font-size:clamp(9px,1.5vw,13px); color:var(--ink-soft)}
@@ -219,11 +227,115 @@ button{font:inherit; color:inherit; cursor:pointer}
 .diploma .row{display:flex; width:100%; justify-content:space-between; align-items:flex-end; margin-top:clamp(6px,2vw,18px); gap:10px}
 .diploma .sig{font-size:clamp(10px,1.6vw,13px); font-weight:800; color:var(--ink-soft); text-align:center; min-width:28%}
 .diploma .sig div{font-family:var(--hand); font-size:clamp(18px,3.2vw,28px); color:var(--ink); border-bottom:1.5px solid var(--ink); padding-bottom:2px; margin-bottom:3px}
-.seal{width:clamp(64px,13vw,120px); aspect-ratio:1; border-radius:50%; background:var(--gold); border:3px solid var(--ink); display:grid; place-items:center; position:relative; transform:rotate(-10deg); flex:none; box-shadow:3px 3px 0 var(--ink)}
+.seal{width:clamp(64px,13vw,120px); aspect-ratio:1; border-radius:50%; background:var(--gold); border:3px solid var(--ink); display:grid; place-items:center; position:relative; transform:rotate(-10deg); flex:none; box-shadow:3px 3px 0 var(--shadow)}
 .seal::before{content:""; position:absolute; inset:6px; border-radius:50%; border:2px dashed var(--ink)}
 .seal b{font-family:var(--display); font-weight:400; font-size:clamp(26px,5.4vw,50px); line-height:1}
 .seal small{position:absolute; bottom:18%; font-weight:900; font-size:clamp(6px,1vw,9px); letter-spacing:.15em}
 .dip-note{font-size:14px; color:var(--ink-soft); font-weight:700; text-align:center}
+
+
+/* ---------- mascots ---------- */
+.mascot{display:block; width:100%; height:auto; overflow:visible}
+.m-idle{animation:breathe 3.2s ease-in-out infinite; transform-origin:50% 100%}
+.m-joy{animation:hop .7s cubic-bezier(.3,1.6,.5,1); transform-origin:50% 100%}
+.m-oops{animation:wobble .55s ease-in-out; transform-origin:50% 100%}
+@keyframes breathe{50%{transform:scale(1.03,.97)}}
+@keyframes hop{0%{transform:none}35%{transform:translateY(-22%) scale(.95,1.08)}70%{transform:translateY(0) scale(1.08,.92)}100%{transform:none}}
+@keyframes wobble{20%{transform:rotate(-9deg)}45%{transform:rotate(8deg)}70%{transform:rotate(-4deg)}100%{transform:none}}
+.egg.m-idle{animation:rock 2.6s ease-in-out infinite; transform-origin:50% 95%}
+@keyframes rock{0%,60%,100%{transform:none}70%{transform:rotate(-7deg)}80%{transform:rotate(6deg)}90%{transform:rotate(-3deg)}}
+.evolved .aura{animation:auraPulse 2.4s ease-in-out infinite; transform-origin:60px 66px}
+@keyframes auraPulse{50%{transform:scale(1.08); opacity:.8}}
+.hatch{animation:hatchIn .9s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes hatchIn{0%{transform:scale(0) rotate(-30deg)}100%{transform:none}}
+.type{display:inline-flex; align-items:center; gap:4px; font-family:var(--body); font-weight:900; font-size:12px; letter-spacing:.12em; text-transform:uppercase; background:var(--tc); color:#fff; border:2px solid var(--ink); border-radius:999px; padding:2px 10px; vertical-align:middle}
+.dex{font-family:var(--body); font-weight:900; font-size:12px; letter-spacing:.1em; color:var(--ink-soft)}
+.tc-m{position:absolute; right:4%; bottom:22%; width:50%; pointer-events:none}
+.tcard[data-t="10"] .tc-m{width:36%; right:1%; bottom:27%}
+.tcard:nth-child(3n) .m-idle{animation-delay:-1s}.tcard:nth-child(3n+1) .m-idle{animation-delay:-2s}
+
+/* ---------- welcome ---------- */
+.w-rain{position:fixed; inset:0; overflow:hidden; pointer-events:none; z-index:0}
+.w-rain span{position:absolute; top:-60px; font-family:var(--display); font-size:var(--fs,22px); background:var(--c); color:var(--on-c,#fff); border:2.5px solid var(--ink); border-radius:12px; padding:2px 10px; box-shadow:3px 3px 0 var(--shadow); opacity:.9; animation:fall var(--dur,12s) linear infinite; animation-delay:var(--del,0s)}
+@keyframes fall{from{transform:translateY(-10vh) rotate(var(--r0,0deg))}to{transform:translateY(115vh) rotate(var(--r1,40deg))}}
+.welcome > *:not(.w-rain){position:relative; z-index:1}
+.w-title .ltr{display:inline-block; color:var(--lc); -webkit-text-stroke:2px var(--ink); paint-order:stroke fill; text-shadow:4px 4px 0 var(--shadow); animation:drop .7s cubic-bezier(.3,1.5,.5,1) both; animation-delay:var(--d)}
+@keyframes drop{from{transform:translateY(-120px) rotate(-20deg); opacity:0}to{transform:none; opacity:1}}
+.w-preview{min-height:1.1em; margin:0; font-family:var(--hand); font-weight:700; font-size:40px; line-height:1.1; color:var(--c); text-align:center}
+.w-preview span{display:inline-block; white-space:pre}
+.w-preview span.new{animation:letterPop .45s cubic-bezier(.3,1.8,.5,1)}
+@keyframes letterPop{0%{transform:translateY(20px) scale(.2)}60%{transform:translateY(-12px) scale(1.25)}100%{transform:none}}
+
+/* ---------- map ---------- */
+.map{position:relative; display:flex; flex-direction:column; gap:34px; padding-block:6px 10px}
+.map svg.road{position:absolute; inset:0; width:100%; height:100%; z-index:0; overflow:visible; pointer-events:none}
+.stop{position:relative; z-index:1; display:flex; align-items:center; gap:18px; margin-left:var(--off,0%)}
+.node-wrap{position:relative; flex:none; display:flex; flex-direction:column; align-items:center; gap:6px}
+.node{width:86px; height:86px; border-radius:50%; border:3.5px solid var(--ink); background:var(--c); color:var(--on-c); display:grid; place-items:center; box-shadow:4px 4px 0 var(--shadow); position:relative}
+.node svg{width:42px; height:42px}
+.node.locked{background:var(--locked); color:var(--ink-soft); border-color:var(--locked-line)}
+.node.done{background:var(--c)}
+.node.goal{background:var(--gold); color:#1D2356}
+.node.goal.locked{background:var(--locked); color:var(--ink-soft)}
+.node.current::after{content:""; position:absolute; inset:-10px; border-radius:50%; border:3px dashed var(--c); animation:spin 8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.node-wrap .stars{display:flex; gap:2px}
+.node-wrap .star{width:20px; height:20px}
+.here{position:absolute; left:-58px; top:6px; width:62px; z-index:2}
+.here small{display:block; text-align:center; font-weight:900; font-size:11px; color:var(--ink); background:var(--card); border:2px solid var(--ink); border-radius:8px; margin-top:-4px; padding:0 2px; white-space:nowrap}
+@media (max-width:640px){ .here{left:-14px; top:-40px; width:46px} .here small{display:none} }
+.stop-card{flex:1; max-width:420px; padding:14px 16px; display:grid; gap:8px}
+.stop-card h3{font-family:var(--display); font-weight:400; font-size:26px; margin:0; line-height:1}
+.stop-card p{margin:0; color:var(--ink-soft); font-size:15px}
+.stop-card .lock{font-weight:800; font-size:13px; color:var(--ink-soft)}
+.stop-card .btns{display:flex; gap:10px; flex-wrap:wrap}
+.stop.is-locked .stop-card{background:var(--locked); border-color:var(--locked-line); box-shadow:5px 5px 0 var(--locked-line)}
+.stop.is-locked h3{opacity:.55}
+.t-mascot{width:130px; flex:none}
+@media (max-width:640px){ .stop{margin-left:calc(var(--off,0%) * .12); gap:12px} .node{width:66px; height:66px} .node svg{width:32px; height:32px} .stop-card h3{font-size:22px} .t-mascot{width:96px} }
+.t-fact{margin:8px 0 0; font-family:var(--hand); font-size:26px; font-weight:700; color:var(--c); line-height:1.1}
+
+/* ---------- play extras ---------- */
+.buddy{display:flex; align-items:center; justify-content:center; gap:12px; margin-top:18px; min-height:84px}
+.buddy-m{width:80px; flex:none}
+.bubble{position:relative; margin:0; background:color-mix(in srgb, var(--c) 10%, var(--card)); border:2.5px solid var(--ink); border-radius:16px; padding:8px 14px; text-align:left; max-width:34ch}
+.bubble::before{content:""; position:absolute; left:-11px; top:50%; width:16px; height:16px; background:inherit; border-left:2.5px solid var(--ink); border-bottom:2.5px solid var(--ink); transform:translateY(-50%) rotate(45deg)}
+.bubble:empty{visibility:hidden}
+.streak{position:absolute; right:12px; top:10px; z-index:3; display:flex; align-items:center; gap:6px; font-family:var(--display); font-size:26px; background:var(--gold); color:#1D2356; border:3px solid var(--ink); border-radius:999px; padding:4px 16px 4px 10px; box-shadow:3px 3px 0 var(--shadow); animation:streakIn 1.9s ease both; pointer-events:none; white-space:nowrap}
+.streak svg{width:28px; height:28px}
+@keyframes streakIn{0%{transform:translateY(-80px) scale(.6)}15%{transform:scale(1.1)}25%{transform:none}80%{transform:none; opacity:1}100%{transform:translateY(-20px); opacity:0}}
+.hurry .timer b{background:var(--bad); animation:pulse .5s ease-in-out infinite alternate}
+.hurry .qcard{border-color:var(--bad); animation:glow 1s ease-in-out infinite}
+.hurry .timer span{font-size:13px}
+@keyframes pulse{to{opacity:.55}}
+@keyframes glow{50%{box-shadow:5px 5px 0 var(--shadow), 0 0 0 8px color-mix(in srgb, var(--bad) 30%, transparent)}}
+.res-mascot{width:120px; margin:0 auto}
+
+/* ---------- album ---------- */
+.album{margin-top:36px; padding:18px 20px 20px}
+.album-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+.album-head h2{font-family:var(--display); font-weight:400; font-size:28px; margin:0}
+.album-head span{font-weight:900; color:var(--ink-soft)}
+.figs{display:grid; grid-template-columns:repeat(10, minmax(0,1fr)); gap:10px}
+@media (max-width:760px){ .figs{grid-template-columns:repeat(5, minmax(0,1fr)); gap:7px} }
+.fig{aspect-ratio:3/4; max-width:100%; border-radius:10px; border:2.5px dashed var(--locked-line); background:var(--locked); display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:6px 4px; font-family:var(--display); font-size:16px; color:var(--ink-soft)}
+.fig .mascot{width:88%}
+.fig.empty .mascot{filter:brightness(0); opacity:.14; animation:none}
+.fig.got{border:2.5px solid var(--ink); background:var(--c); color:var(--on-c); box-shadow:3px 3px 0 var(--shadow); cursor:pointer; outline:3px solid var(--gold); outline-offset:-7px; animation:shine 3s ease-in-out infinite}
+.fig.got:hover{transform:translateY(-3px) rotate(-2deg)}
+@keyframes shine{50%{outline-color:#FFF3B0}}
+
+/* ---------- diploma extras ---------- */
+.rosette{width:clamp(70px,14vw,128px); flex:none; transform:rotate(-8deg); animation:pop .6s .2s both}
+.dip-mascot{position:absolute; top:7%; right:6%; width:13%}
+.dip-mascot2{position:absolute; top:7%; left:6%; width:9%; transform:rotate(-12deg)}
+
+/* ---------- doodles ---------- */
+.doodles{position:fixed; inset:0; pointer-events:none; z-index:0; display:none}
+.doodles svg{position:absolute; width:90px; height:90px; fill:none; stroke:var(--doodle); stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; opacity:.8}
+.doodles text{fill:var(--doodle); stroke:none; font-family:var(--hand); font-size:30px; font-weight:700}
+@media (min-width:1180px){ .doodles{display:block} }
+.wrap{position:relative; z-index:1}
 
 #fx{position:fixed; inset:0; pointer-events:none; z-index:50}
 @media (prefers-reduced-motion: reduce){
@@ -234,10 +346,21 @@ button{font:inherit; color:inherit; cursor:pointer}
 </head>
 <body>
 
+<div class="doodles" aria-hidden="true">
+  <svg style="left:2.5%;top:14%" viewBox="0 0 90 90"><path d="M45 10l9 22 23 2-18 15 6 23-20-13-20 13 6-23-18-15 23-2z"/></svg>
+  <svg style="left:2%;top:40%;width:130px" viewBox="0 0 130 90"><text x="6" y="52" transform="rotate(-8 60 45)">3×3=9</text><path d="M10 64 q30 10 90 -6"/></svg>
+  <svg style="left:3%;top:63%" viewBox="0 0 90 90"><path d="M45 45 a4 4 0 1 1 8 0 a8 8 0 1 1 -16 0 a12 12 0 1 1 24 0 a16 16 0 1 1 -32 0 a20 20 0 1 1 40 0"/></svg>
+  <svg style="left:2.5%;top:83%" viewBox="0 0 90 90"><path d="M8 50 L80 18 L52 74 L42 54 Z M42 54 L80 18"/><path d="M8 70 q10 -8 18 0 t18 0" stroke-dasharray="2 7"/></svg>
+  <svg style="right:3%;top:10%" viewBox="0 0 90 90"><circle cx="45" cy="45" r="14"/><path d="M45 14v10M45 66v10M14 45h10M66 45h10M24 24l7 7M59 59l7 7M66 24l-7 7M31 59l-7 7"/></svg>
+  <svg style="right:3%;top:34%" viewBox="0 0 90 90"><circle cx="45" cy="45" r="30"/><path d="M35 38v3M55 38v3M32 54 q13 14 26 0"/></svg>
+  <svg style="right:3.5%;top:58%" viewBox="0 0 90 90"><path d="M45 72 C12 48 16 18 45 32 C74 18 78 48 45 72Z"/></svg>
+  <svg style="right:2%;top:80%;width:130px" viewBox="0 0 130 90"><text x="4" y="50" transform="rotate(6 60 45)">7×8=56</text><path d="M96 20 l10 10 l18 -22"/></svg>
+</div>
 <canvas id="fx"></canvas>
 <div class="wrap">
   <header class="top">
     <div class="tools">
+      <button class="chip-btn" id="nightBtn" aria-pressed="false">Modo noche</button>
       <button class="chip-btn" id="soundBtn" aria-pressed="true">Sonido: sí</button>
     </div>
   </header>
@@ -245,18 +368,14 @@ button{font:inherit; color:inherit; cursor:pointer}
   <!-- WELCOME -->
   <main id="vWelcome" hidden>
     <section class="welcome">
-      <div class="w-float" aria-hidden="true">
-        <span style="--c:#FF5A5F;left:4%;top:8%;--r:-14deg">2×3</span>
-        <span style="--c:#1FB8A8;right:6%;top:4%;--r:10deg">5×5</span>
-        <span style="--c:#FFC23C;left:10%;bottom:6%;--r:8deg;--on-c:#1D2356">4×9</span>
-        <span style="--c:#C04CFD;right:4%;bottom:12%;--r:-9deg">7×8</span>
-      </div>
+      <div class="w-rain" id="wRain" aria-hidden="true"></div>
       <div class="w-mark">×</div>
       <p class="w-kicker">Bienvenidos a</p>
-      <h1 class="w-title">Misión Tablas</h1>
+      <h1 class="w-title" id="wTitle" aria-label="Misión Tablas">Misión Tablas</h1>
       <form class="sticker w-form" id="wForm">
         <label for="wName">¿Cómo te llamás?</label>
         <input id="wName" maxlength="28" placeholder="Escribí tu nombre" autocomplete="off">
+        <p class="w-preview" id="wPreview" aria-hidden="true"></p>
         <button class="btn" type="submit">¡A jugar! →</button>
         <p class="w-err" id="wErr" hidden>Escribí tu nombre para empezar.</p>
       </form>
@@ -276,6 +395,10 @@ button{font:inherit; color:inherit; cursor:pointer}
       </div>
     </section>
     <div class="tables" id="tables"></div>
+    <section class="sticker album">
+      <div class="album-head"><h2>Mi álbum de diplomas</h2><span id="albumCount">0 de 10</span></div>
+      <div class="figs" id="figs"></div>
+    </section>
     <div class="foot">
       <label class="toggle"><input type="checkbox" id="teacher"> Modo docente: todos los niveles abiertos</label>
       <button class="linkish danger" id="resetBtn">Borrar progreso</button>
@@ -286,13 +409,14 @@ button{font:inherit; color:inherit; cursor:pointer}
   <main id="vTable" hidden>
     <button class="back" data-go="home">← Todas las tablas</button>
     <div class="thead">
-      <div class="bigseal" id="tSeal">7</div>
+      <div class="t-mascot" id="tSeal"></div>
       <div>
         <h2 id="tTitle">Tabla del 7</h2>
         <p id="tSub">Completá las cuatro misiones en orden.</p>
+        <p class="t-fact" id="tFact"></p>
       </div>
     </div>
-    <div class="path" id="path"></div>
+    <div class="map" id="path"></div>
     <div class="sticker cheat" id="cheat" hidden>
       <p class="section-label">Tu tabla completa</p>
       <div class="cheat-grid" id="cheatGrid"></div>
@@ -311,7 +435,7 @@ button{font:inherit; color:inherit; cursor:pointer}
     <div class="stage" id="stage">
       <section class="sticker qcard" id="qcard">
         <div class="eq" id="eq"></div>
-        <div class="hint-line info" id="hint"></div>
+        <div class="buddy"><div class="buddy-m" id="buddy"></div><p class="bubble hint-line info" id="hint"></p></div>
         <div class="enter-row">
           <button class="btn" id="checkBtn">Comprobar</button>
           <span class="tip">o apretá <span class="kbd">Enter ↵</span></span>
@@ -369,6 +493,67 @@ button{font:inherit; color:inherit; cursor:pointer}
   const setColor = (el, t) => { el.style.setProperty("--c", COLORS[t]); el.style.setProperty("--on-c", DARK_TEXT.has(t) ? "#1D2356" : "#FFFFFF"); };
   const unlocked = (t, i) => S.teacher || i===0 || S.t[t].s[i-1] > 0;
 
+
+  /* ---------- creatures ---------- */
+  const K = "#1D2356";
+  const MASCOT = {
+    1:{name:"Chispín", type:"Fuego", tc:"#FF6B2C", fact:"Chispín tiene una sola llama en la cabeza."},
+    2:{name:"Orejitas", type:"Viento", tc:"#36B5E8", fact:"Orejitas vuela moviendo sus 2 orejas."},
+    3:{name:"Trioji", type:"Psíquico", tc:"#E8489A", fact:"Trioji ve el futuro con sus 3 ojos."},
+    4:{name:"Manchita", type:"Bicho", tc:"#5FA31A", fact:"Manchita tiene 4 manchas de la suerte."},
+    5:{name:"Estelín", type:"Cósmico", tc:"#5B54E0", fact:"Estelín brilla con sus 5 puntas."},
+    6:{name:"Mielina", type:"Planta", tc:"#2E9E5B", fact:"Mielina tiene 6 lados, como las celdas del panal."},
+    7:{name:"Arcoirín", type:"Hada", tc:"#D05BD6", fact:"Arcoirín pinta el cielo con 7 colores."},
+    8:{name:"Pulpín", type:"Agua", tc:"#1C7FD6", fact:"Pulpín nada con sus 8 brazos."},
+    9:{name:"Misifú", type:"Sombra", tc:"#4B3F8F", fact:"Dicen que los gatos tienen 7 vidas… ¡Misifú tiene 9!"},
+    10:{name:"Robotín", type:"Acero", tc:"#6E7A9E", fact:"Robotín tiene 10 luces en la panza."}
+  };
+  const stage = t => S.t[t].dip ? 2 : S.t[t].s.some(v=>v>0) ? 1 : 0;
+  const typeChip = t => `<span class="type" style="--tc:${MASCOT[t].tc}">${MASCOT[t].type}</span>`;
+  const eyeO = (x,y,s) => `<ellipse cx="${x}" cy="${y}" rx="${5.6*s}" ry="${7.4*s}" fill="${K}"/><circle cx="${x+1.9*s}" cy="${y-2.8*s}" r="${2.5*s}" fill="#fff"/><circle cx="${x-2*s}" cy="${y+3*s}" r="${1.2*s}" fill="#fff"/>`;
+  const eyeH = (x,y,s) => `<path d="M${x-5.5*s} ${y+2*s} Q${x} ${y-7*s} ${x+5.5*s} ${y+2*s}" fill="none" stroke="${K}" stroke-width="${3.2*s}" stroke-linecap="round"/>`;
+  function face(x,y,mood,s=1,eyes=2){
+    const E = mood==="joy" ? eyeH : eyeO;
+    let e = eyes===3 ? E(x-15*s,y,s*.82)+E(x,y-8*s,s*.82)+E(x+15*s,y,s*.82) : E(x-13*s,y,s)+E(x+13*s,y,s);
+    if(mood==="oops") e += `<path d="M${x-19*s} ${y-12*s} L${x-9*s} ${y-9*s} M${x+19*s} ${y-12*s} L${x+9*s} ${y-9*s}" stroke="${K}" stroke-width="${2.6*s}" stroke-linecap="round"/><path d="M${x+27*s} ${y-16*s} q${4*s} ${7*s} 0 ${9*s} q${-4*s} ${-2*s} 0 ${-9*s}Z" fill="#8FD8FF" stroke="${K}" stroke-width="${1.5*s}"/>`;
+    const ch = `<ellipse cx="${x-22*s}" cy="${y+9*s}" rx="${5*s}" ry="${3*s}" fill="#FF8FA3" opacity=".85"/><ellipse cx="${x+22*s}" cy="${y+9*s}" rx="${5*s}" ry="${3*s}" fill="#FF8FA3" opacity=".85"/>`;
+    let m;
+    if(mood==="joy") m = `<path d="M${x-10*s} ${y+8*s} Q${x} ${y+25*s} ${x+10*s} ${y+8*s} Z" fill="${K}"/><path d="M${x-5*s} ${y+16*s} Q${x} ${y+21*s} ${x+5*s} ${y+16*s} Z" fill="#FF6B81"/>`;
+    else if(mood==="oops") m = `<path d="M${x-7*s} ${y+15*s} q${3.5*s} ${-4*s} ${7*s} 0 q${3.5*s} ${4*s} ${7*s} 0" fill="none" stroke="${K}" stroke-width="${2.6*s}" stroke-linecap="round"/>`;
+    else m = `<path d="M${x-7*s} ${y+10*s} q${3.5*s} ${5*s} ${7*s} 0 q${3.5*s} ${5*s} ${7*s} 0" fill="none" stroke="${K}" stroke-width="${2.8*s}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    return e+ch+m;
+  }
+  const feet = (C, y=110, x1=44, x2=76) => `<ellipse cx="${x1}" cy="${y}" rx="10" ry="6" fill="${C}" stroke="${K}" stroke-width="3"/><ellipse cx="${x2}" cy="${y}" rx="10" ry="6" fill="${C}" stroke="${K}" stroke-width="3"/>`;
+  const arms = (C, y=80, xl=24, xr=96) => `<ellipse cx="${xl}" cy="${y}" rx="7" ry="11" transform="rotate(25 ${xl} ${y})" fill="${C}" stroke="${K}" stroke-width="3"/><ellipse cx="${xr}" cy="${y}" rx="7" ry="11" transform="rotate(-25 ${xr} ${y})" fill="${C}" stroke="${K}" stroke-width="3"/>`;
+  const belly = (y=88, rx=18, ry=14) => `<ellipse cx="60" cy="${y}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".38"/>`;
+  const spark = (x,y,r=7) => `<path d="M${x} ${y-r}Q${x} ${y} ${x+r} ${y}Q${x} ${y} ${x} ${y+r}Q${x} ${y} ${x-r} ${y}Q${x} ${y} ${x} ${y-r}Z" fill="#FFD84D" stroke="${K}" stroke-width="1.5" stroke-linejoin="round"/>`;
+  function egg(t){
+    const C = COLORS[t];
+    return `<ellipse cx="60" cy="113" rx="28" ry="5" fill="#000" opacity=".12"/><path d="M60 16C85 16 97 56 97 77C97 99 81 112 60 112C39 112 23 99 23 77C23 56 35 16 60 16Z" fill="#FFF8E7" stroke="${K}" stroke-width="3"/><circle cx="45" cy="54" r="8" fill="${C}"/><circle cx="74" cy="42" r="5.5" fill="${C}"/><circle cx="79" cy="77" r="10" fill="${C}"/><circle cx="44" cy="90" r="7" fill="${C}"/><circle cx="63" cy="100" r="4.5" fill="${C}"/><circle cx="61" cy="70" r="3.5" fill="${C}"/><ellipse cx="42" cy="36" rx="5" ry="10" transform="rotate(-24 42 36)" fill="#fff"/>`;
+  }
+  function mascot(t, mood="idle", cls="", stg){
+    if(stg===undefined) stg = stage(t);
+    if(stg===0) return `<svg class="mascot egg m-${mood} ${cls}" viewBox="0 0 120 120" aria-hidden="true">${egg(t)}</svg>`;
+    const C = COLORS[t], st = `stroke="${K}" stroke-width="3" stroke-linejoin="round"`;
+    let b = "";
+    if(t===1) b = feet(C) + arms(C,82,25,95) + `<path d="M60 30C88 30 95 58 95 78C95 99 80 112 60 112C40 112 25 99 25 78C25 58 32 30 60 30Z" fill="${C}" ${st}/><path d="M58 34C46 26 48 12 58 2C60 12 72 12 70 24C76 20 80 28 72 36Z" fill="#FFB703" ${st}/><path d="M60 30C56 24 57 16 60 12C62 18 66 20 65 28Z" fill="#FFF3B0"/>` + belly(94) + face(60,70,mood);
+    if(t===2) b = feet(C) + arms(C,86,24,96) + `<g transform="rotate(-12 42 34)"><ellipse cx="42" cy="34" rx="11" ry="28" fill="${C}" ${st}/><ellipse cx="42" cy="37" rx="4.5" ry="18" fill="#FFB3C1"/></g><g transform="rotate(12 78 34)"><ellipse cx="78" cy="34" rx="11" ry="28" fill="${C}" ${st}/><ellipse cx="78" cy="37" rx="4.5" ry="18" fill="#FFB3C1"/></g><ellipse cx="60" cy="80" rx="38" ry="32" fill="${C}" ${st}/>` + belly(96,16,10) + face(60,76,mood);
+    if(t===3) b = feet(C) + `<path d="M44 34L34 12M76 34L86 12" stroke="${K}" stroke-width="3" stroke-linecap="round"/><circle cx="34" cy="11" r="6" fill="#8AC926" ${st}/><circle cx="86" cy="11" r="6" fill="#8AC926" ${st}/>` + arms(C,82,21,99) + `<circle cx="60" cy="70" r="40" fill="${C}" ${st}/>` + belly(96,16,8) + face(60,70,mood,1,3);
+    if(t===4) b = feet(K,111) + `<path d="M48 32Q42 14 32 10M72 32Q78 14 88 10" stroke="${K}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="32" cy="10" r="4.5" fill="${K}"/><circle cx="88" cy="10" r="4.5" fill="${K}"/>` + arms(K,80,20,100) + `<circle cx="60" cy="70" r="42" fill="${C}" ${st}/><circle cx="32" cy="54" r="7.5" fill="${K}"/><circle cx="88" cy="54" r="7.5" fill="${K}"/><circle cx="36" cy="92" r="7.5" fill="${K}"/><circle cx="84" cy="92" r="7.5" fill="${K}"/>` + face(60,68,mood);
+    if(t===5){ let pts=[]; for(let i=0;i<10;i++){ const a=(-90+36*i)*Math.PI/180, r=i%2?26:54; pts.push((60+r*Math.cos(a)).toFixed(1)+","+(66+r*Math.sin(a)).toFixed(1)); } b = `<polygon points="${pts.join(" ")}" fill="${C}" stroke="${K}" stroke-width="3.5" stroke-linejoin="round"/>` + spark(100,24,6) + spark(18,30,5) + face(60,68,mood,.82); }
+    if(t===6){ let pts=[]; for(let i=0;i<6;i++){ const a=(30+60*i)*Math.PI/180; pts.push((60+44*Math.cos(a)).toFixed(1)+","+(68+44*Math.sin(a)).toFixed(1)); } b = feet(C,110,46,74) + `<ellipse cx="32" cy="28" rx="17" ry="10" transform="rotate(-35 32 28)" fill="#fff" opacity=".95" ${st}/><ellipse cx="88" cy="28" rx="17" ry="10" transform="rotate(35 88 28)" fill="#fff" opacity=".95" ${st}/><path d="M52 26Q48 10 40 8M68 26Q72 10 80 8" stroke="${K}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="40" cy="8" r="4" fill="#FFB703" ${st}/><circle cx="80" cy="8" r="4" fill="#FFB703" ${st}/>` + arms(C,78,18,102) + `<polygon points="${pts.join(" ")}" fill="${C}" stroke="${K}" stroke-width="3.5" stroke-linejoin="round"/><path d="M40 98h40" stroke="#FFB703" stroke-width="6" stroke-linecap="round"/>` + face(60,64,mood); }
+    if(t===7){ const rb=["#FF5A5F","#FF8C42","#FFC23C","#8AC926","#1FB8A8","#1982C4","#6A4C93"]; b = `<path d="M26 78A34 34 0 0 1 94 78" stroke="${K}" stroke-width="48" fill="none"/>` + rb.map((c,i)=>{const r=54-i*6.2; return `<path d="M${(60-r).toFixed(1)} 78A${r} ${r} 0 0 1 ${(60+r).toFixed(1)} 78" stroke="${c}" stroke-width="6.4" fill="none"/>`;}).join("") + feet("#fff",112,48,72) + `<g stroke="${K}" stroke-width="6"><circle cx="36" cy="90" r="16"/><circle cx="60" cy="82" r="21"/><circle cx="84" cy="90" r="16"/><rect x="36" y="90" width="48" height="16"/></g><g fill="#fff"><circle cx="36" cy="90" r="16"/><circle cx="60" cy="82" r="21"/><circle cx="84" cy="90" r="16"/><rect x="36" y="90" width="48" height="16"/></g>` + spark(106,30,5) + face(60,88,mood,.72); }
+    if(t===8){ let ten=""; for(let i=0;i<8;i++){ const x0=28+i*9.1, x1=x0+(i-3.5)*4, w=(i%2?9:-9); const d=`M${x0} 70Q${x0+w} 92 ${x1} 108`; ten += `<path d="${d}" stroke="${K}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${C}" stroke-width="7" fill="none" stroke-linecap="round"/>`; } b = ten + `<ellipse cx="60" cy="52" rx="40" ry="37" fill="${C}" ${st}/><circle cx="42" cy="28" r="6" fill="#fff" opacity=".45"/><circle cx="100" cy="22" r="5" fill="#BDEBFF" ${st}/><circle cx="108" cy="8" r="3" fill="#BDEBFF" stroke="${K}" stroke-width="2"/>` + face(60,56,mood); }
+    if(t===9) b = `<path d="M92 100C118 96 114 60 100 66" stroke="${K}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M92 100C118 96 114 60 100 66" stroke="${C}" stroke-width="7" fill="none" stroke-linecap="round"/>` + feet(C) + `<polygon points="24,56 26,12 58,34" fill="${C}" ${st}/><polygon points="96,56 94,12 62,34" fill="${C}" ${st}/><polygon points="31,46 32,24 48,35" fill="#FFB3C1"/><polygon points="89,46 88,24 72,35" fill="#FFB3C1"/><ellipse cx="60" cy="74" rx="40" ry="35" fill="${C}" ${st}/><path d="M24 80L8 76M24 88L8 92M96 80L112 76M96 88L112 92" stroke="${K}" stroke-width="2.5" stroke-linecap="round"/>` + belly(98,14,7) + face(60,70,mood);
+    if(t===10){ let lights=""; for(let i=0;i<10;i++){ lights += `<circle cx="${42+(i%5)*9}" cy="${i<5?98:107}" r="3" fill="${i%3?'#FFC23C':'#3DE0C8'}"/>`; } b = `<rect x="38" y="110" width="14" height="8" rx="3" fill="#A9B0DA" ${st}/><rect x="68" y="110" width="14" height="8" rx="3" fill="#A9B0DA" ${st}/><path d="M60 24V12" stroke="${K}" stroke-width="3"/><circle cx="60" cy="10" r="6" fill="#FF5A5F" ${st}/><rect x="10" y="44" width="12" height="24" rx="4" fill="#A9B0DA" ${st}/><rect x="98" y="44" width="12" height="24" rx="4" fill="#A9B0DA" ${st}/><rect x="34" y="86" width="52" height="28" rx="8" fill="${C}" ${st}/>${lights}<rect x="20" y="22" width="80" height="64" rx="16" fill="${C}" ${st}/><rect x="28" y="30" width="64" height="46" rx="11" fill="#CFF4FF" ${st}/>` + face(60,48,mood,.8); }
+    let aura = "";
+    if(stg===2){
+      aura = `<defs><radialGradient id="aura"><stop offset="0" stop-color="#FFE27A" stop-opacity=".9"/><stop offset=".6" stop-color="#FFD84D" stop-opacity=".35"/><stop offset="1" stop-color="#FFD84D" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="66" r="62" fill="url(#aura)" class="aura"/>`;
+      b += spark(10,20,8) + spark(110,96,7) + spark(8,98,5) + spark(112,40,5);
+    }
+    return `<svg class="mascot m-${mood} ${stg===2?'evolved':''} ${cls}" viewBox="0 0 120 120" aria-hidden="true">${aura}${b}</svg>`;
+  }
+
   /* ---------- sound ---------- */
   let AC = null;
   function tone(freq, dur=.12, type="sine", when=0, vol=.18){
@@ -381,26 +566,59 @@ button{font:inherit; color:inherit; cursor:pointer}
       o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0+dur+.02);
     }catch(e){}
   }
-  const sOk = () => { tone(660,.1,"triangle"); tone(990,.16,"triangle",.08); };
-  const sBad = () => { tone(180,.22,"sawtooth",0,.09); };
-  const sWin = () => { [523,659,784,1047].forEach((f,i)=>tone(f,.22,"triangle",i*.11)); };
-  const sTick = () => tone(880,.06,"square",0,.05);
+  function mallet(f, when=0, vol=.22, dur=.9){
+    if(!S.sound) return;
+    try{
+      AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+      const t0 = AC.currentTime + when;
+      [[1,vol,dur],[4,vol*.3,dur*.16]].forEach(([m,v,d])=>{
+        const o = AC.createOscillator(), g = AC.createGain();
+        o.type = "sine"; o.frequency.value = f*m;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(v, t0+.004); g.gain.exponentialRampToValueAtTime(0.0001, t0+d);
+        o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0+d+.05);
+      });
+    }catch(e){}
+  }
+  const sOk = () => { mallet(784); mallet(1047,.08); };
+  const sBad = () => { mallet(330,0,.2,.5); mallet(262,.14,.2,.7); };
+  const sWin = () => { [523,659,784,1047,1319].forEach((f,i)=>mallet(f,i*.1,.2,1.1)); };
+  const sStreak = () => { [784,880,1047,1175,1319,1568].forEach((f,i)=>mallet(f,i*.055,.16,.6)); };
+  const sTick = () => mallet(1568,0,.09,.18);
+  const sNote = () => mallet(587,0,.14,.4);
+  const sGo = () => { mallet(1047); mallet(1319,.06); };
 
   /* ---------- confetti ---------- */
   const fx = $("fx"), ctx = fx.getContext("2d"); let parts = [], fxRun = false;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   function sizeFx(){ fx.width = innerWidth*devicePixelRatio; fx.height = innerHeight*devicePixelRatio; }
   addEventListener("resize", sizeFx); sizeFx();
-  function confetti(n=140){
+  function confetti(n=140, ox, oy){
     if(reduce) return;
     const cols = Object.values(COLORS).concat(["#F2B233"]);
-    for(let i=0;i<n;i++) parts.push({x:innerWidth*(.2+Math.random()*.6), y:innerHeight*.35, vx:(Math.random()-.5)*14, vy:-Math.random()*14-4, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3, w:6+Math.random()*8, h:4+Math.random()*6, c:cols[Math.random()*cols.length|0], life:0, shape:Math.random()<.25?"x":"r"});
+    for(let i=0;i<n;i++) parts.push({x:ox!=null ? ox+(Math.random()-.5)*60 : innerWidth*(.2+Math.random()*.6), y:oy!=null ? oy : innerHeight*.35, vx:(Math.random()-.5)*14, vy:-Math.random()*14-4, r:Math.random()*Math.PI, vr:(Math.random()-.5)*.3, w:6+Math.random()*8, h:4+Math.random()*6, c:cols[Math.random()*cols.length|0], life:0, shape:Math.random()<.25?"x":"r"});
     if(!fxRun){ fxRun=true; requestAnimationFrame(stepFx); }
+  }
+  function burst(x, y){
+    const pal = [["#FF5A5F","#FFC23C","#fff"],["#1FB8A8","#8AC926","#fff"],["#C04CFD","#FF4F9A","#FFF3B0"],["#1982C4","#00D1FF","#fff"],["#F2B233","#FF8C42","#fff"]][Math.random()*5|0];
+    const n = 70;
+    for(let i=0;i<n;i++){ const a = i/n*Math.PI*2, sp = 3+Math.random()*4.5; parts.push({kind:"spark", x, y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, c:pal[i%pal.length], life:0, max:55+Math.random()*25}); }
+    mallet(200+Math.random()*80, 0, .12, .35);
+    if(!fxRun){ fxRun=true; requestAnimationFrame(stepFx); }
+  }
+  function fireworks(k=6){
+    if(reduce) return;
+    for(let i=0;i<k;i++) setTimeout(()=>burst(innerWidth*(.15+Math.random()*.7), innerHeight*(.12+Math.random()*.35)), i*380);
   }
   function stepFx(){
     const d = devicePixelRatio; ctx.clearRect(0,0,fx.width,fx.height);
-    parts = parts.filter(p => p.y < innerHeight+40 && p.life < 400);
+    parts = parts.filter(p => p.y < innerHeight+40 && p.life < (p.max||400));
     for(const p of parts){
+      if(p.kind==="spark"){
+        p.vy += .07; p.vx *= .965; p.vy *= .965; p.x += p.vx; p.y += p.vy; p.life++;
+        ctx.globalAlpha = Math.max(0, 1 - p.life/p.max); ctx.fillStyle = p.c;
+        ctx.beginPath(); ctx.arc(p.x*d, p.y*d, 2.6*d, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1;
+        continue;
+      }
       p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
       ctx.save(); ctx.translate(p.x*d, p.y*d); ctx.rotate(p.r); ctx.fillStyle = p.c;
       if(p.shape==="x"){ ctx.font = `${22*d}px "Lilita One", sans-serif`; ctx.fillText("×", -6*d, 6*d); }
@@ -416,7 +634,7 @@ button{font:inherit; color:inherit; cursor:pointer}
   function show(v){ views.forEach(id => $(id).hidden = id!==v); scrollTo({top:0}); }
 
   function renderHome(){
-    $("hello").innerHTML = `¡Hola, <span class="hello-name">${((S.name||"").trim() || "campeón").replace(/[<>&]/g,"")}</span>!`;
+    $("hello").innerHTML = `¡Hola, <span style="white-space:nowrap"><span class="hello-name">${((S.name||"").trim() || "campeón").replace(/[<>&]/g,"")}</span>!</span>`;
     $("teacher").checked = S.teacher;
     let dips=0, st=0;
     const html = [];
@@ -427,34 +645,73 @@ button{font:inherit; color:inherit; cursor:pointer}
         ${d.dip?`<span class="ribbon" title="Diploma ganado"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.3 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z" fill="#fff" stroke="#1D2356" stroke-width="1.6" stroke-linejoin="round"/></svg></span>`:""}
         <span class="lbl">Tabla del</span>
         <span class="num">${t}</span>
+        <span class="tc-m">${mascot(t)}</span>
         <span class="pips">${d.s.map(v=>`<i class="pip${v>0?' on':''}"></i>`).join("")}</span>
       </button>`);
     }
     $("tables").innerHTML = html.join("");
     $("stDip").textContent = dips; $("stStars").textContent = st;
+    $("albumCount").textContent = `${dips} de 10`;
+    $("figs").innerHTML = Array.from({length:10},(_,k)=>{
+      const t=k+1, got=!!S.t[t].dip, on = DARK_TEXT.has(t) ? "#1D2356" : "#fff";
+      return got ? `<button class="fig got" data-fig="${t}" style="--c:${COLORS[t]};--on-c:${on}" aria-label="Diploma de la tabla del ${t}">${mascot(t,"idle","",2)}<span>×${t}</span></button>`
+                 : `<div class="fig empty" title="Todavía no ganaste este diploma">${mascot(t,"idle","",1)}<span>×${t}</span></div>`;
+    }).join("");
     show("vHome");
   }
 
   function renderTable(t){
     curT = t; const d = S.t[t];
     setColor(document.body, t);
-    $("tSeal").textContent = t; $("tTitle").textContent = `Tabla del ${t}`;
+    $("tSeal").innerHTML = mascot(t, d.dip ? "joy" : "idle"); $("tTitle").textContent = `Tabla del ${t}`;
+    const stg = stage(t), nm = MASCOT[t].name;
+    $("tFact").innerHTML = stg===0 ? `Adentro de este huevo hay una criatura esperando. ${typeChip(t)}` : `${MASCOT[t].fact} ${typeChip(t)}`;
     const done = d.s.filter(v=>v>0).length;
-    $("tSub").textContent = d.dip ? "¡Tabla dominada! Podés volver a jugar cualquier misión." : done ? `Llevás ${done} de 4 misiones.` : "Completá las cuatro misiones en orden.";
-    $("path").innerHTML = LEVELS.map((L,i) => {
+    $("tSub").textContent = d.dip ? `¡Tabla dominada! ${nm} evolucionó a su forma brillante.` : stg===0 ? "Completá «Aprender» para que el huevo se abra." : `Llevás ${done} de 4 misiones con ${nm}. Aprobá la evaluación para que evolucione.`;
+    const ICONS = [
+      `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M6 10c6-2 10-1 14 2v20c-4-3-8-4-14-2zM34 10c-6-2-10-1-14 2v20c4-3 8-4 14-2z"/></svg>`,
+      `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3"><circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="8"/><circle cx="20" cy="20" r="2.5" fill="currentColor"/></svg>`,
+      `<svg viewBox="0 0 40 40" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M23 3L8 23h10l-3 14 17-21H21z"/></svg>`,
+      `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect x="9" y="7" width="22" height="28" rx="3"/><path d="M15 5h10v5H15zM14 22l4 4 8-9"/></svg>`
+    ];
+    const TROPHY = `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M13 6h14v8a7 7 0 0 1-14 0z"/><path d="M13 9H7c0 5 3 8 7 8M27 9h6c0 5-3 8-7 8M20 21v6M13 34h14M16 27h8v7h-8z"/></svg>`;
+    const LOCK = `<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="10" y="18" width="20" height="16" rx="3"/><path d="M14 18v-5a6 6 0 0 1 12 0v5"/></svg>`;
+    let current = -1;
+    for(let i=0;i<4;i++){ if(unlocked(t,i) && d.s[i]===0){ current=i; break; } }
+    if(current<0 && !d.dip) current = 3;
+    const OFF = ["0%","20%","40%","20%","4%"];
+    const hereHTML = `<div class="here">${mascot(t,"idle")}<small>¡Estás acá!</small></div>`;
+    const stopsHTML = LEVELS.map((L,i) => {
       const open = unlocked(t,i), sc = d.s[i];
-      const cta = !open ? `<span class="lock">🔒 Superá “${LEVELS[i-1].name}” para abrir</span>`
-        : `<button class="btn${sc?' ghost':''}" data-lvl="${i}">${sc?'Jugar de nuevo':'Empezar'}</button>`;
-      return `<div class="sticker lvl${open?'':' locked'}">
-        <div class="step"><span class="n">${i+1}</span><span class="stars">${stars(sc)}</span></div>
-        <h3>${L.name}</h3><p>${L.desc}</p>${cta}
-        ${i===3 && d.dip ? `<button class="btn ghost" data-dip="1">Ver diploma</button>`:""}
+      const cta = !open ? `<span class="lock">Superá “${LEVELS[i-1].name}” para abrir esta parada.</span>`
+        : `<div class="btns"><button class="btn${sc?' ghost':''}" data-lvl="${i}">${sc?'Jugar de nuevo':'Empezar'}</button></div>`;
+      return `<div class="stop${open?'':' is-locked'}" style="--off:${OFF[i]}">
+        <div class="node-wrap">${i===current?hereHTML:""}<div class="node${open?'':' locked'}${sc?' done':''}${i===current?' current':''}">${open?ICONS[i]:LOCK}</div><span class="stars">${stars(sc)}</span></div>
+        <div class="sticker stop-card"><h3>${i+1}. ${L.name}</h3><p>${L.desc}</p>${cta}</div>
       </div>`;
     }).join("");
+    const goal = `<div class="stop${d.dip?'':' is-locked'}" style="--off:${OFF[4]}">
+        <div class="node-wrap">${d.dip?hereHTML:""}<div class="node goal${d.dip?'':' locked'}">${TROPHY}</div></div>
+        <div class="sticker stop-card"><h3>Meta: el diploma</h3><p>${d.dip?'¡Lo ganaste! Está guardado en tu álbum.':'Aprobá la evaluación: ganás el diploma y tu criatura evoluciona.'}</p>${d.dip?'<div class="btns"><button class="btn" data-dip="1">Ver diploma</button></div>':''}</div>
+      </div>`;
+    $("path").innerHTML = `<svg class="road" id="road"></svg>` + stopsHTML + goal;
     $("cheat").hidden = !(d.s[0] > 0 || S.teacher);
     $("cheatGrid").innerHTML = Array.from({length:10},(_,i)=>`<span>${t} × ${i+1} = <em>${t*(i+1)}</em></span>`).join("");
     show("vTable");
+    requestAnimationFrame(drawRoad);
   }
+
+  function drawRoad(){
+    const map = $("path"), svg = $("road"); if(!svg || $("vTable").hidden) return;
+    const mr = map.getBoundingClientRect();
+    const pts = [...map.querySelectorAll(".node")].map(n => { const r = n.getBoundingClientRect(); return [r.left - mr.left + r.width/2, r.top - mr.top + r.height/2]; });
+    if(pts.length<2) return;
+    let dd = `M${pts[0][0]} ${pts[0][1]}`;
+    for(let i=1;i<pts.length;i++){ const [x0,y0]=pts[i-1], [x1,y1]=pts[i], my=(y0+y1)/2; dd += ` C${x0} ${my} ${x1} ${my} ${x1} ${y1}`; }
+    svg.setAttribute("viewBox", `0 0 ${mr.width} ${mr.height}`);
+    svg.innerHTML = `<path d="${dd}" fill="none" stroke="var(--ink)" stroke-width="26" stroke-linecap="round"/><path d="${dd}" fill="none" stroke="var(--road)" stroke-width="20" stroke-linecap="round"/><path d="${dd}" fill="none" stroke="var(--c)" stroke-width="4" stroke-dasharray="2 12" stroke-linecap="round"/>`;
+  }
+  addEventListener("resize", () => requestAnimationFrame(drawRoad));
 
   /* ---------- game engine ---------- */
   let G = null;
@@ -475,6 +732,7 @@ button{font:inherit; color:inherit; cursor:pointer}
     if(key==="fix"){ G.queue = bs.map((b,i)=> makeQ(t,b, i%3===2 ? "miss":"prod", Math.random()<.4)); }
     if(key==="exam"){ G.queue = bs.map((b,i)=> makeQ(t,b, (i===3||i===6||i===8) ? "miss":"prod", Math.random()<.35)); }
     if(key==="speed"){ G.queue = []; G.last = 0; }
+    G.streak = 0; $("vPlay").classList.remove("hurry"); $("buddy").innerHTML = mascot(t,"idle");
 
     $("pTitle").innerHTML = `${LEVELS[lvl].name}<small>Tabla del ${t}</small>`;
     $("pProg").hidden = key==="speed"; $("pTimer").hidden = key!=="speed"; $("pScore").hidden = key!=="speed";
@@ -494,7 +752,7 @@ button{font:inherit; color:inherit; cursor:pointer}
     $("pTimerBar").style.transform = "scaleX(1)"; $("pTimerTxt").textContent = SPEED_SECS+" s";
     const tick = () => {
       if(!G || G.key!=="speed"){ cd.remove(); return; }
-      if(k<seq.length){ cd.innerHTML = `<span>${seq[k]}</span>`; k<3 ? sTick() : tone(1320,.2,"square",0,.06); k++; G.cdT = setTimeout(tick, 650); }
+      if(k<seq.length){ cd.innerHTML = `<span>${seq[k]}</span>`; k<3 ? sTick() : sGo(); k++; G.cdT = setTimeout(tick, 650); }
       else { cd.remove(); G.busy=false; G.t0 = performance.now(); runTimer(); ansEl.focus(); }
     };
     tick();
@@ -503,7 +761,10 @@ button{font:inherit; color:inherit; cursor:pointer}
     if(!G || G.key!=="speed") return;
     const left = Math.max(0, SPEED_SECS - (performance.now()-G.t0)/1000);
     $("pTimerBar").style.transform = `scaleX(${left/SPEED_SECS})`;
-    $("pTimerTxt").textContent = Math.ceil(left)+" s";
+    const secs = Math.ceil(left);
+    $("pTimerTxt").textContent = left<=15 ? `¡Rápido! ${secs} s` : secs+" s";
+    if(left<=15) $("vPlay").classList.add("hurry");
+    if(left<=5 && secs!==G.lastTick){ G.lastTick = secs; sTick(); }
     if(left<=0){ finish(); return; }
     G.raf = requestAnimationFrame(runTimer);
   }
@@ -533,7 +794,20 @@ button{font:inherit; color:inherit; cursor:pointer}
     requestAnimationFrame(()=>ansEl.focus({preventScroll:true}));
   }
 
-  function setHint(txt, kind){ const h=$("hint"); h.className = "hint-line "+kind; h.textContent = txt; }
+  function setHint(txt, kind){ const h=$("hint"); h.className = "bubble hint-line "+kind; h.textContent = txt; }
+  let moodT = null;
+  function setMood(m){ if(!G) return; $("buddy").innerHTML = mascot(G.t, m); clearTimeout(moodT); if(m!=="idle") moodT = setTimeout(()=>{ if(G) $("buddy").innerHTML = mascot(G.t,"idle"); }, 1100); }
+  const FLAME = `<svg viewBox="0 0 24 24"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-3-1-6 1-9z" fill="#FF5A5F" stroke="#1D2356" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 12c1 2 3 3 3 5a3 3 0 0 1-6 0c0-1 1-2 1-3 1 1 2 0 2-2z" fill="#FFC23C"/></svg>`;
+  function streakHit(){
+    G.streak = (G.streak||0) + 1;
+    const n = G.streak;
+    if(n===3 || n===5 || n===8 || (n>=10 && n%5===0)){
+      const card = $("qcard"), old = card.querySelector(".streak"); if(old) old.remove();
+      const el = document.createElement("div"); el.className = "streak"; el.innerHTML = `${FLAME} ¡Racha de ${n}!`;
+      card.appendChild(el); setTimeout(()=>el.remove(), 2000);
+      sStreak(); const r = card.getBoundingClientRect(); confetti(n>=8?70:40, r.left + r.width/2, r.top + 40);
+    }
+  }
 
   function renderQ(){
     G.cur = G.queue[G.i]; G.tries = 0; renderEq();
@@ -564,19 +838,20 @@ button{font:inherit; color:inherit; cursor:pointer}
 
     if(G.key==="exam"){
       G.busy = true; G.results[G.i] = ok; if(ok) G.correct++; else { G.wrong++; G.missed.add(JSON.stringify({f:full, got:v})); }
-      tone(520,.08,"triangle",0,.1); ansEl.disabled = true;
+      sNote(); ansEl.disabled = true;
       setHint("Anotado.", "info");
       setTimeout(()=>advance(), 380); return;
     }
 
     if(ok){
-      ansEl.classList.add("ok"); card.classList.add("flash-ok"); sOk(); G.busy = true;
+      ansEl.classList.add("ok"); card.classList.add("flash-ok"); sOk(); G.busy = true; setMood("joy");
+      if(G.key!=="learn" || G.tries===0) streakHit(); else G.streak = 0;
       if(G.key==="speed"){ G.correct++; $("pScore").textContent = G.correct; setHint("¡Bien!", "ok"); setTimeout(()=>{ G.busy=false; if(G) nextSpeed(); }, 220); return; }
       if(G.tries===0){ G.correct++; G.results[G.i] = G.results[G.i]===undefined ? true : G.results[G.i]; }
       setHint(G.key==="learn" ? `¡Eso! ${full}` : "¡Correcto!", "ok");
       setTimeout(()=>advance(), G.key==="learn" ? 750 : 520);
     } else {
-      ansEl.classList.add("bad"); card.classList.add("flash-bad"); sBad(); G.tries++;
+      ansEl.classList.add("bad"); card.classList.add("flash-bad"); sBad(); G.tries++; G.streak = 0; setMood("oops");
       if(G.key==="learn"){
         G.results[G.i] = false; G.missed.add(q.b);
         setHint(`Casi. ${full}. Escribilo para seguir.`, "bad");
@@ -604,7 +879,7 @@ button{font:inherit; color:inherit; cursor:pointer}
 
   function finish(){
     if(!G) return;
-    cancelAnimationFrame(G.raf); clearTimeout(G.cdT);
+    cancelAnimationFrame(G.raf); clearTimeout(G.cdT); $("vPlay").classList.remove("hurry");
     const {t, lvl, key} = G; const d = S.t[t];
     let st = 0, title="", msg="", nums=[], pass=false, extra="";
     if(key==="learn"){
@@ -635,7 +910,12 @@ button{font:inherit; color:inherit; cursor:pointer}
       if(G.missed.size) extra = `<ul class="review">${[...G.missed].map(s=>{const m=JSON.parse(s); return `<li><span>${m.f}</span><span>pusiste ${m.got}</span></li>`;}).join("")}</ul>`;
       if(pass){ const today = new Date().toISOString().slice(0,10); if(!d.dip || st >= d.s[3]) d.dip = today; }
     }
+    const before = stage(t);
     d.s[lvl] = Math.max(d.s[lvl], st); save();
+    const after = stage(t), nm = MASCOT[t].name;
+    let special = "";
+    if(before===0 && after===1){ title = "¡Tu huevo se abrió!"; msg = `Conocé a ${nm}, de tipo ${MASCOT[t].type}. ${msg}`; special = "hatch"; }
+    if(before<2 && after===2){ title = `¡Aprobaste! ${nm} evolucionó`; msg = `Ganaste el diploma de la tabla del ${t} y ${nm} ahora brilla.`; special = "hatch"; }
     const firstTimeUnlock = pass && lvl<3 && !S.teacher;
 
     let actions = `<button class="btn ghost" data-act="again">Repetir</button>`;
@@ -645,23 +925,37 @@ button{font:inherit; color:inherit; cursor:pointer}
     actions += `<button class="btn ghost" data-act="table">Ver la tabla</button>`;
 
     $("result").innerHTML = `
+      <div class="res-mascot">${mascot(t, pass?"joy":"oops", special)}</div>
+      ${special ? `<div>${typeChip(t)}</div>` : ""}
       <div class="bigstars">${stars(st)}</div>
       <h2>${title}</h2><p>${msg}</p>${extra}
       <div class="nums">${nums.map(([k,v])=>`<div>${k}<b>${v}</b></div>`).join("")}</div>
       ${firstTimeUnlock ? `<p style="font-weight:800;color:var(--ok)">Se abrió “${LEVELS[lvl+1].name}”.</p>`:""}
       <div class="actions">${actions}</div>`;
     G = null; show("vResult");
-    if(pass){ sWin(); confetti(key==="exam"?260:120); } else sBad();
+    if(pass){ sWin(); confetti(key==="exam"?200:120); if(key==="exam" || special) fireworks(special && key!=="exam" ? 4 : 7); } else sBad();
     const first = $("result").querySelector(".btn:not(.ghost)") || $("result").querySelector(".btn"); first && first.focus();
   }
 
   /* ---------- diploma ---------- */
+  function rosette(t, honors){
+    let pts=[]; for(let i=0;i<40;i++){ const a=i/40*Math.PI*2, r=i%2?46:54; pts.push((60+r*Math.cos(a)).toFixed(1)+","+(58+r*Math.sin(a)).toFixed(1)); }
+    return `<svg class="rosette" viewBox="0 0 120 150" aria-hidden="true">
+      <path d="M44 90L30 146L44 136L52 148L60 96Z" fill="${COLORS[t]}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M76 90L90 146L76 136L68 148L60 96Z" fill="${COLORS[t]}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>
+      <polygon points="${pts.join(" ")}" fill="${COLORS[t]}" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="60" cy="58" r="38" fill="#F2B233" stroke="${K}" stroke-width="3"/>
+      <circle cx="60" cy="58" r="31" fill="none" stroke="${K}" stroke-width="1.8" stroke-dasharray="3 4"/>
+      <text x="60" y="66" text-anchor="middle" font-family="Lilita One, Arial Rounded MT Bold, sans-serif" font-size="30" fill="${K}">×${t}</text>
+      <text x="60" y="80" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="900" font-size="7.5" letter-spacing="1.2" fill="${K}">${honors?"PERFECTO":"APROBADO"}</text>
+    </svg>`;
+  }
   function renderDiploma(t){
     const d = S.t[t]; setColor(document.body, t);
     const date = d.dip ? new Date(d.dip+"T12:00:00").toLocaleDateString("es-AR",{day:"numeric", month:"long", year:"numeric"}) : "";
     const who = (S.name||"").trim() || "Campeón o campeona";
     const honors = d.s[3]===3;
-    $("diploma").innerHTML = `<div class="frame"></div><div class="inner">
+    $("diploma").innerHTML = `<div class="frame"></div><div class="dip-mascot">${mascot(t,"joy","",2)}</div><div class="dip-mascot2">${starSVG(true)}</div><div class="inner">
       <div class="kicker">Misión Tablas otorga el</div>
       <h2>Diploma</h2>
       <div class="to">a</div>
@@ -669,15 +963,16 @@ button{font:inherit; color:inherit; cursor:pointer}
       <div class="why">por aprender, fijar, responder a toda velocidad y aprobar la evaluación de la <b>Tabla del ${t}</b>${honors?" con 10 de 10":""}.</div>
       <div class="row">
         <div class="sig"><div>${date}</div>Fecha</div>
-        <div class="seal"><b>×${t}</b><small>${honors?"PERFECTO":"APROBADO"}</small></div>
+        ${rosette(t, honors)}
         <div class="sig"><div>Misión Tablas</div>Firma</div>
       </div></div>`;
     $("diploma").style.setProperty("--c", COLORS[t]);
-    show("vDiploma"); confetti(90);
+    show("vDiploma"); fireworks(5); confetti(60);
   }
 
   /* ---------- events ---------- */
   $("tables").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if(b) renderTable(+b.dataset.t); });
+  $("figs").addEventListener("click", e => { const b = e.target.closest("[data-fig]"); if(b){ curT = +b.dataset.fig; renderDiploma(curT); } });
   $("path").addEventListener("click", e => {
     const b = e.target.closest("[data-lvl]"); if(b) startLevel(curT, +b.dataset.lvl);
     if(e.target.closest("[data-dip]")) renderDiploma(curT);
@@ -698,9 +993,29 @@ button{font:inherit; color:inherit; cursor:pointer}
   document.querySelectorAll("[data-go=home]").forEach(b=>b.addEventListener("click", renderHome));
   $("quitBtn").addEventListener("click", () => { stopGame(); renderTable(curT); });
   $("dipBack").addEventListener("click", () => renderTable(curT));
-  function stopGame(){ if(G){ cancelAnimationFrame(G.raf); clearTimeout(G.cdT); } G = null; }
+  function stopGame(){ if(G){ cancelAnimationFrame(G.raf); clearTimeout(G.cdT); } G = null; $("vPlay").classList.remove("hurry"); }
 
-  function renderWelcome(){ $("wName").value = S.name || ""; $("wErr").hidden = true; show("vWelcome"); setTimeout(()=>$("wName").focus(), 50); }
+  const TITLE_COLORS = ["#FF5A5F","#FF8C42","#FFC23C","#8AC926","#1FB8A8","#1982C4","#C04CFD","#FF4F9A"];
+  (() => {
+    let k=0;
+    $("wTitle").innerHTML = [..."Misión Tablas"].map((ch,i)=> ch===" " ? `<span class="ltr" style="--d:${i*55}ms">&nbsp;</span>` : `<span class="ltr" aria-hidden="true" style="--lc:${TITLE_COLORS[(k++)%TITLE_COLORS.length]};--d:${i*55}ms">${ch}</span>`).join("");
+    const facts = ["2×3","6","5×5","25","4×9","36","7×8","56","×","=","3×7","21","9×9","81","10×4","40","6×6","8×3"];
+    $("wRain").innerHTML = facts.map((f,i)=>{
+      const t = 1 + (i % 9), on = DARK_TEXT.has(t) ? "#1D2356" : "#fff";
+      return `<span style="left:${(i*37)%96}%;--c:${COLORS[t]};--on-c:${on};--fs:${16+(i*7)%16}px;--dur:${11+(i*5)%9}s;--del:-${(i*1.7)%14}s;--r0:${(i*23)%40-20}deg;--r1:${(i*31)%90-45}deg">${f}</span>`;
+    }).join("");
+  })();
+  let prevName = "";
+  function paintPreview(){
+    const n = $("wName").value.trim(), el = $("wPreview");
+    if(!n){ el.innerHTML = ""; prevName = ""; return; }
+    const txt = `¡Hola, ${n}!`;
+    const keep = prevName ? `¡Hola, ${prevName}`.length : 0;
+    el.innerHTML = [...txt].map((ch,i)=>`<span class="${i>=keep && i<txt.length-1 ? 'new':''}">${ch.replace(/[<>&]/g,"")}</span>`).join("");
+    prevName = n;
+  }
+  $("wName").addEventListener("input", paintPreview);
+  function renderWelcome(){ $("wName").value = S.name || ""; prevName=""; paintPreview(); $("wErr").hidden = true; show("vWelcome"); setTimeout(()=>$("wName").focus(), 50); }
   $("wForm").addEventListener("submit", e => {
     e.preventDefault(); const n = $("wName").value.trim();
     if(!n){ $("wErr").hidden = false; $("wName").focus(); return; }
@@ -712,10 +1027,14 @@ button{font:inherit; color:inherit; cursor:pointer}
   const paintSound = () => { soundBtn.textContent = "Sonido: " + (S.sound?"sí":"no"); soundBtn.setAttribute("aria-pressed", S.sound); };
   soundBtn.addEventListener("click", () => { S.sound = !S.sound; save(); paintSound(); if(S.sound) sOk(); });
   paintSound();
+  const nightBtn = $("nightBtn");
+  const paintNight = () => { document.body.classList.toggle("night", !!S.night); nightBtn.textContent = S.night ? "Modo día" : "Modo noche"; nightBtn.setAttribute("aria-pressed", !!S.night); requestAnimationFrame(drawRoad); };
+  nightBtn.addEventListener("click", () => { S.night = !S.night; save(); paintNight(); });
+  paintNight();
 
   let resetArmed = null;
   $("resetBtn").addEventListener("click", e => {
-    if(resetArmed){ clearTimeout(resetArmed); resetArmed=null; const keep = {name:S.name, sound:S.sound}; S = Object.assign(blank(), keep); save(); e.target.textContent="Borrar progreso"; renderHome(); return; }
+    if(resetArmed){ clearTimeout(resetArmed); resetArmed=null; const keep = {name:S.name, sound:S.sound, night:S.night}; S = Object.assign(blank(), keep); save(); e.target.textContent="Borrar progreso"; renderHome(); return; }
     e.target.textContent = "¿Seguro? Tocá de nuevo para borrar todo";
     resetArmed = setTimeout(()=>{ e.target.textContent="Borrar progreso"; resetArmed=null; }, 4000);
   });
