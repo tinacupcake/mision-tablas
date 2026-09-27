@@ -39,8 +39,8 @@ body{
   background-size:100% 100%, 24px 24px, 24px 24px;
   background-attachment:fixed;
 }
-.wrap{max-width:980px; margin:0 auto; padding-inline:max(16px, 3vw); padding-inline-start:max(56px, 3vw); padding-block:20px 48px}
-@media (max-width:520px){ .wrap{padding-inline-start:52px; padding-inline-end:16px} }
+.wrap{max-width:980px; margin:0 auto; padding-inline:max(16px, 3vw); padding-inline-start:max(16px, 3vw); padding-block:20px 48px}
+@media (max-width:520px){ .wrap{padding-inline:16px} }
 button{font:inherit; color:inherit; cursor:pointer}
 :focus-visible{outline:3px solid var(--ink); outline-offset:3px}
 
@@ -420,11 +420,135 @@ body.night .hero .hello{color:var(--c-lt)}
 .t-mascot{width:180px; aspect-ratio:1; flex:none}
 .buddy-m{width:104px; aspect-ratio:1}
 .evo3d{width:190px; aspect-ratio:1; margin:0 auto}
-.w-3d{width:190px; aspect-ratio:1; margin-bottom:6px; display:grid; place-items:center}
+.w-3d{width:260px; aspect-ratio:1; margin-bottom:0; display:grid; place-items:center}
 .w-3d .w-mark{margin:0}
 .res-mascot{width:150px}
 .m3d.m-idle{animation:breathe 3.2s ease-in-out infinite}
-@media (max-width:640px){ .t-mascot{width:130px} .evo3d{width:160px} .w-3d{width:150px} }
+@media (max-width:640px){ .t-mascot{width:130px} .evo3d{width:160px} .w-3d{width:210px} }
+
+/* ================= WORLD BACKGROUND ================= */
+[hidden]{display:none !important}
+:root{ --sky1:#BFE3FF; --sky2:#E4E8FF; --sky3:#F6ECFF; --glowA:rgba(255,255,255,.9); --glowB:rgba(255,205,235,.65); --glowC:rgba(180,250,225,.55); --hill1:#9ED9B9; --hill2:#B7E6CB; --hill3:#D3EEDD; --cloud:rgba(255,255,255,.92); }
+body.night{ --sky1:#0C1033; --sky2:#1B1650; --sky3:#2C1D5E; --glowA:rgba(120,90,255,.28); --glowB:rgba(255,90,200,.18); --glowC:rgba(60,230,200,.16); --hill1:#1A1745; --hill2:#221D55; --hill3:#2C2668; --cloud:rgba(170,160,255,.12); }
+body, body.night{
+  background-color:var(--sky2);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .8 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(900px 600px at 8% -5%, var(--glowA), transparent 62%),
+    radial-gradient(750px 520px at 95% 8%, var(--glowB), transparent 60%),
+    radial-gradient(900px 600px at 70% 100%, var(--glowC), transparent 62%),
+    linear-gradient(180deg, var(--sky1) 0%, var(--sky2) 48%, var(--sky3) 100%);
+  background-size:180px 180px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+  background-attachment:fixed;
+}
+.doodles{display:none}
+.scenery{position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden}
+.scenery .hills{position:absolute; left:0; bottom:0; width:100%; height:26vh; min-height:140px}
+.scenery .h1{fill:var(--hill1)} .scenery .h2{fill:var(--hill2)} .scenery .h3{fill:var(--hill3)}
+.cloud{position:absolute; width:220px; height:64px; border-radius:64px; background:var(--cloud); filter:blur(1px); animation:drift 70s linear infinite}
+.cloud::before,.cloud::after{content:""; position:absolute; background:inherit; border-radius:50%}
+.cloud::before{width:90px; height:90px; left:36px; top:-44px}
+.cloud::after{width:120px; height:110px; left:92px; top:-62px}
+.c1{top:9%; left:-260px; animation-duration:80s}
+.c2{top:26%; left:-260px; transform:scale(.7); animation-duration:110s; animation-delay:-45s}
+.c3{top:4%; left:-260px; transform:scale(.55); animation-duration:95s; animation-delay:-70s; opacity:.8}
+@keyframes drift{to{translate:calc(100vw + 520px) 0}}
+.spark{position:absolute; width:14px; height:14px; background:radial-gradient(circle, #fff 0 22%, transparent 24%), conic-gradient(from 45deg, transparent 0 20%, rgba(255,255,255,.95) 25%, transparent 30% 45%, rgba(255,255,255,.95) 50%, transparent 55% 70%, rgba(255,255,255,.95) 75%, transparent 80%); border-radius:50%; animation:twk 3.4s ease-in-out infinite}
+.s1{top:18%; left:12%} .s2{top:34%; right:9%; animation-delay:-1s} .s3{top:62%; left:6%; animation-delay:-2s} .s4{top:12%; right:24%; animation-delay:-.5s} .s5{top:48%; right:4%; animation-delay:-2.6s}
+@keyframes twk{0%,100%{transform:scale(.4); opacity:.2}50%{transform:scale(1.1) rotate(45deg); opacity:1}}
+.stars{position:absolute; inset:0; opacity:0; background-image:radial-gradient(1.5px 1.5px at 20px 30px, #fff, transparent), radial-gradient(1px 1px at 90px 80px, #fff, transparent), radial-gradient(1.5px 1.5px at 160px 20px, #fff, transparent), radial-gradient(1px 1px at 220px 140px, #fff, transparent), radial-gradient(1.2px 1.2px at 60px 170px, #fff, transparent); background-size:250px 200px}
+body.night .stars{opacity:.8}
+body.night .spark{opacity:.9}
+.wrap{position:relative; z-index:1}
+
+/* ================= HOME CTA ================= */
+.album-cta{margin-top:30px; width:100%; display:flex; align-items:center; gap:16px; padding:16px 20px; text-align:left; color:var(--ink); cursor:pointer; transition:transform .15s}
+.album-cta:hover{transform:translateY(-3px)}
+.cta-book{width:56px; height:56px; flex:none; border-radius:16px; display:grid; place-items:center; color:#fff; background:linear-gradient(180deg,#8E74FF,#5B45D6); box-shadow:0 4px 0 var(--shadow), inset 0 2px 0 rgba(255,255,255,.4)}
+.cta-book svg{width:32px; height:32px}
+.cta-txt{flex:1; display:grid}
+.cta-txt b{font-family:var(--display); font-weight:400; font-size:26px; line-height:1.1}
+.cta-txt small{font-weight:800; color:var(--ink-soft); font-size:14px}
+.cta-thumbs{display:flex}
+.cta-thumbs span{width:58px; height:58px; margin-left:-12px; border-radius:50%; background:radial-gradient(circle at 35% 30%, var(--c-lt), var(--c) 60%, var(--c-dk)); border:3px solid var(--card); box-shadow:0 3px 8px rgba(0,0,0,.2); display:grid; place-items:center; overflow:hidden}
+.cta-thumbs .mascot{width:120%; max-width:none}
+.cta-arrow{font-family:var(--display); font-size:34px; color:var(--ink-soft)}
+@media (max-width:560px){ .cta-thumbs{display:none} }
+
+/* ================= ALBUM VIEW ================= */
+.album-bar{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:10px}
+.album-bar .btn svg{flex:none}
+.album-hero h1{font-family:var(--display); font-weight:400; font-size:clamp(34px,6vw,54px); margin:6px 0 2px; line-height:1; text-shadow:0 3px 0 color-mix(in srgb, var(--ink) 18%, transparent)}
+.album-hero p{margin:0 0 18px; font-weight:800; color:var(--ink-soft)}
+.album-hero b{color:var(--ink); font-family:var(--display); font-weight:400; font-size:22px}
+#vAlbum .album-stage{margin-top:22px}
+#vAlbum .album-stage h3{font-family:var(--display); font-weight:400; font-size:24px; letter-spacing:0; text-transform:none; color:var(--ink); margin:0 0 10px}
+#vAlbum .figs{grid-template-columns:repeat(5, minmax(0,1fr)); gap:14px}
+@media (max-width:640px){ #vAlbum .figs{grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px} }
+#vAlbum .fig{aspect-ratio:3/4; border-radius:16px; padding:8px 6px; position:relative; font-size:13px}
+#vAlbum .fig .mascot{width:96%}
+#vAlbum .fig small{font-size:12px; font-weight:900}
+.fig-n{align-self:flex-start; font-family:var(--body); font-weight:900; font-size:10px; letter-spacing:.08em; opacity:.8}
+.fig-q{font-family:var(--display); font-size:54px; line-height:1; color:var(--ink-soft); opacity:.5}
+.fig.empty{border-style:dashed; background:color-mix(in srgb, var(--card) 55%, transparent); backdrop-filter:blur(2px)}
+.rw-q{display:grid; place-items:center; width:40px; height:40px; margin:3px; border-radius:50%; border:2px dashed var(--gold); font-family:var(--display); font-size:22px; color:var(--ink-soft)}
+
+/* ================= DEX CARD ================= */
+.dex{position:fixed; inset:0; z-index:40; display:grid; place-items:center; padding:16px; background:rgba(15,18,50,.55); backdrop-filter:blur(6px); animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}}
+.dex-card{position:relative; width:min(760px,100%); max-height:92vh; overflow:auto; display:grid; grid-template-columns:1fr 1.1fr; gap:10px; border:3px solid var(--ink); border-radius:24px; background:radial-gradient(120% 80% at 25% 20%, var(--c-lt), var(--c) 55%, var(--c-dk)); box-shadow:0 8px 0 var(--shadow), 0 30px 50px -10px rgba(0,0,0,.5); animation:dexIn .35s cubic-bezier(.3,1.5,.5,1)}
+@keyframes dexIn{from{transform:scale(.85) translateY(20px); opacity:0}}
+@media (max-width:640px){ .dex-card{grid-template-columns:1fr} }
+.dex-stage{display:flex; flex-direction:column; align-items:center; justify-content:center; padding:18px 10px 6px}
+.dex-3d{width:min(300px,78vw); aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 45%, rgba(255,255,255,.55), rgba(255,255,255,0) 68%)}
+.dex-hint{margin:4px 0 0; font-size:12px; font-weight:800; color:var(--on-c); opacity:.8}
+.dex-info{background:var(--card); margin:12px; border-radius:18px; border:2.5px solid var(--ink); padding:16px 18px; display:grid; gap:10px; align-content:start; color:var(--ink)}
+.dex-num{margin:0; font-weight:900; font-size:12px; letter-spacing:.12em; color:var(--ink-soft); text-transform:uppercase}
+.dex-info h2{font-family:var(--display); font-weight:400; font-size:36px; margin:0; line-height:1}
+.dex-chips{display:flex; gap:8px; flex-wrap:wrap}
+.stage-chip{display:inline-flex; font-weight:900; font-size:12px; letter-spacing:.1em; text-transform:uppercase; border:2px solid var(--ink); border-radius:999px; padding:2px 10px; background:var(--gold); color:#1D2356; box-shadow:0 2px 0 var(--shadow)}
+.stats{display:grid; gap:6px}
+.stat{display:grid; grid-template-columns:78px 1fr 22px; align-items:center; gap:8px; font-weight:800; font-size:13px}
+.stat i{height:12px; border-radius:8px; background:color-mix(in srgb, var(--ink) 12%, transparent); overflow:hidden; box-shadow:inset 0 2px 3px rgba(0,0,0,.15)}
+.stat b{display:block; height:100%; border-radius:8px; background:linear-gradient(180deg, var(--c-lt), var(--c)); animation:grow .7s ease-out}
+@keyframes grow{from{width:0}}
+.stat em{font-style:normal; font-family:var(--display); font-size:18px; text-align:right}
+.dex-info h3{margin:4px 0 0; font-family:var(--display); font-weight:400; font-size:22px}
+.powers{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.powers li{display:grid; gap:1px; padding:8px 12px; border-radius:12px; background:color-mix(in srgb, var(--c) 12%, var(--card)); border:2px solid color-mix(in srgb, var(--c) 40%, transparent)}
+.powers b{font-family:var(--display); font-weight:400; font-size:18px}
+.powers span{font-size:14px; color:var(--ink-soft); font-weight:700}
+.dex-fact{margin:0; font-family:var(--hand); font-size:24px; font-weight:700; color:var(--c-dk); line-height:1.1}
+.dex-got{margin:0; font-size:13px; font-weight:800; color:var(--ink-soft)}
+.dex-close{position:absolute; top:10px; right:12px; z-index:2; width:40px; height:40px; border-radius:50%; border:3px solid var(--ink); background:var(--card); color:var(--ink); font-family:var(--display); font-size:24px; line-height:1; box-shadow:0 3px 0 var(--shadow)}
+
+/* ================= STICKER SHEET ================= */
+.st-note{font-weight:700; color:var(--ink-soft); margin:0 0 14px; max-width:70ch}
+.sheet{background:#fff; color:#1D2356; border-radius:10px; padding:24px; box-shadow:0 8px 0 var(--shadow), 0 30px 40px -18px rgba(0,0,0,.4); max-width:820px; margin:0 auto}
+.sheet-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap; border-bottom:2px dashed #C8CDE6; padding-bottom:10px; margin-bottom:16px}
+.sheet-head h2{font-family:var(--display); font-weight:400; font-size:30px; margin:0}
+.sheet-head p{margin:0; font-weight:800; color:#4A5188}
+.stk-grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:14px}
+@media (max-width:560px){ .stk-grid{grid-template-columns:repeat(3, 1fr)} }
+.stk{aspect-ratio:1; border-radius:50%; padding:5px; background:#fff; outline:1.5px dashed #AEB6D4; outline-offset:4px; box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.stk-in{position:relative; width:100%; height:100%; border-radius:50%; overflow:hidden; background:radial-gradient(circle at 35% 28%, var(--c-lt), var(--c) 58%, var(--c-dk)); display:flex; flex-direction:column; align-items:center; justify-content:center; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.stk-in img, .stk-in .mascot{width:92%; margin-top:-6%}
+.stk-in span{position:absolute; bottom:8%; font-family:var(--display); font-size:13px; color:#fff; -webkit-text-stroke:.6px #1D2356; paint-order:stroke fill; text-shadow:0 1px 0 #1D2356}
+.stk.empty{display:grid; place-items:center; background:#F4F6FC; box-shadow:none; outline-color:#D5DAEE}
+.stk.empty span{font-family:var(--display); font-size:34px; color:#C8CDE6}
+
+@media print{
+  @page{size:A4; margin:10mm}
+  body, body.night{background:#fff !important}
+  .scenery, .top, .no-print, #fx, .dex{display:none !important}
+  .wrap{padding:0 !important; max-width:none}
+  .wrap > main:not(#vStickers){display:none !important}
+  #vStickers{display:block !important}
+  .sheet{box-shadow:none; padding:0; max-width:none; border-radius:0}
+  .stk-grid{grid-template-columns:repeat(5, 1fr); gap:6mm}
+  .stk{box-shadow:none; break-inside:avoid}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
 
 #fx{position:fixed; inset:0; pointer-events:none; z-index:50}
 @media (prefers-reduced-motion: reduce){
@@ -435,15 +559,18 @@ body.night .hero .hello{color:var(--c-lt)}
 </head>
 <body>
 
-<div class="doodles" aria-hidden="true">
-  <svg style="left:2.5%;top:14%" viewBox="0 0 90 90"><path d="M45 10l9 22 23 2-18 15 6 23-20-13-20 13 6-23-18-15 23-2z"/></svg>
-  <svg style="left:2%;top:40%;width:130px" viewBox="0 0 130 90"><text x="6" y="52" transform="rotate(-8 60 45)">3×3=9</text><path d="M10 64 q30 10 90 -6"/></svg>
-  <svg style="left:3%;top:63%" viewBox="0 0 90 90"><path d="M45 45 a4 4 0 1 1 8 0 a8 8 0 1 1 -16 0 a12 12 0 1 1 24 0 a16 16 0 1 1 -32 0 a20 20 0 1 1 40 0"/></svg>
-  <svg style="left:2.5%;top:83%" viewBox="0 0 90 90"><path d="M8 50 L80 18 L52 74 L42 54 Z M42 54 L80 18"/><path d="M8 70 q10 -8 18 0 t18 0" stroke-dasharray="2 7"/></svg>
-  <svg style="right:3%;top:10%" viewBox="0 0 90 90"><circle cx="45" cy="45" r="14"/><path d="M45 14v10M45 66v10M14 45h10M66 45h10M24 24l7 7M59 59l7 7M66 24l-7 7M31 59l-7 7"/></svg>
-  <svg style="right:3%;top:34%" viewBox="0 0 90 90"><circle cx="45" cy="45" r="30"/><path d="M35 38v3M55 38v3M32 54 q13 14 26 0"/></svg>
-  <svg style="right:3.5%;top:58%" viewBox="0 0 90 90"><path d="M45 72 C12 48 16 18 45 32 C74 18 78 48 45 72Z"/></svg>
-  <svg style="right:2%;top:80%;width:130px" viewBox="0 0 130 90"><text x="4" y="50" transform="rotate(6 60 45)">7×8=56</text><path d="M96 20 l10 10 l18 -22"/></svg>
+<div class="scenery" aria-hidden="true">
+  <div class="stars"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <i class="spark s1"></i><i class="spark s2"></i><i class="spark s3"></i><i class="spark s4"></i><i class="spark s5"></i>
+  <svg class="hills" viewBox="0 0 1440 320" preserveAspectRatio="none"><path class="h3" d="M0 190C220 120 470 140 720 185C960 228 1210 150 1440 135V320H0Z"/><path class="h2" d="M0 245C300 195 610 228 900 248C1150 265 1300 228 1440 218V320H0Z"/><path class="h1" d="M0 288C210 266 500 276 760 292C1010 307 1250 282 1440 276V320H0Z"/></svg>
+</div>
+<div class="dex" id="dex" hidden role="dialog" aria-modal="true" aria-labelledby="dexName">
+  <div class="dex-card" id="dexCard">
+    <button class="dex-close" id="dexClose" aria-label="Cerrar ficha">×</button>
+    <div class="dex-stage"><div class="dex-3d" id="dex3d"></div><p class="dex-hint">Arrastrá para girarlo</p></div>
+    <div class="dex-info" id="dexInfo"></div>
+  </div>
 </div>
 <canvas id="fx"></canvas>
 <div class="wrap">
@@ -457,7 +584,6 @@ body.night .hero .hello{color:var(--c-lt)}
   <!-- WELCOME -->
   <main id="vWelcome" hidden>
     <section class="welcome">
-      <div class="w-rain" id="wRain" aria-hidden="true"></div>
       <div class="w-3d" id="w3d"><div class="w-mark">×</div></div>
       <p class="w-kicker">Bienvenidos a</p>
       <h1 class="w-title" id="wTitle" aria-label="Misión Tablas">Misión Tablas</h1>
@@ -484,10 +610,12 @@ body.night .hero .hello{color:var(--c-lt)}
       </div>
     </section>
     <div class="tables" id="tables"></div>
-    <section class="sticker album">
-      <div class="album-head"><h2>Mi álbum de criaturas</h2><span id="albumCount">0 de 30 figuritas</span></div>
-      <div id="figs"></div>
-    </section>
+    <button class="sticker album-cta" id="albumBtn">
+      <span class="cta-book" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M6 9c6-2 10-1 14 2v22c-4-3-8-4-14-2zM34 9c-6-2-10-1-14 2v22c4-3 8-4 14-2z"/></svg></span>
+      <span class="cta-txt"><b>Mi álbum de criaturas</b><small id="albumCount">0 de 30 figuritas</small></span>
+      <span class="cta-thumbs" id="ctaThumbs"></span>
+      <span class="cta-arrow" aria-hidden="true">→</span>
+    </button>
     <div class="foot">
       <label class="toggle"><input type="checkbox" id="teacher"> Modo docente: todos los niveles abiertos</label>
       <button class="linkish danger" id="resetBtn">Borrar progreso</button>
@@ -544,6 +672,20 @@ body.night .hero .hello{color:var(--c-lt)}
   <!-- RESULT -->
   <main id="vResult" hidden>
     <section class="sticker result" id="result"></section>
+  </main>
+
+  <!-- ALBUM -->
+  <main id="vAlbum" hidden>
+    <div class="album-bar"><button class="back" data-go="home">← Volver al inicio</button><button class="btn" id="stickerBtn"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/><circle cx="17.5" cy="12" r=".6" fill="currentColor"/></svg> Plancha de stickers</button></div>
+    <header class="album-hero"><h1>Mi álbum de criaturas</h1><p><b id="albumCount2">0</b> de 30 figuritas · Tocá una figurita para ver su ficha</p></header>
+    <div id="figs"></div>
+  </main>
+
+  <!-- STICKERS -->
+  <main id="vStickers" hidden>
+    <div class="album-bar no-print"><button class="back" id="stBack">← Volver al álbum</button><button class="btn" id="printBtn"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/><circle cx="17.5" cy="12" r=".6" fill="currentColor"/></svg> Imprimir</button></div>
+    <p class="st-note no-print">Solo aparecen las criaturas que ya conseguiste. Las demás se van a ir sumando a la plancha. Consejo: imprimila en papel autoadhesivo. Si no se abre la impresión, apretá <b>Ctrl + P</b>.</p>
+    <section class="sheet" id="sheet"></section>
   </main>
 
   <!-- DIPLOMA -->
@@ -1160,9 +1302,10 @@ body.night .hero .hello{color:var(--c-lt)}
 
   /* thumbnails (one offscreen renderer) */
   let TR = null; const THUMBS = {};
-  function thumb(t, stg, mood){
-    const key = `${t}-${stg}-${mood}`; if(THUMBS[key]) return THUMBS[key];
+  function thumb(t, stg, mood, size=260){
+    const key = `${t}-${stg}-${mood}-${size}`; if(THUMBS[key]) return THUMBS[key];
     if(!TR){ const r = new T3.WebGLRenderer({antialias:true, alpha:true, preserveDrawingBuffer:true}); r.setPixelRatio(1); r.setSize(260,260,false); const sc = new T3.Scene(); addLights(sc); const cam = new T3.PerspectiveCamera(30,1,.1,100); cam.position.set(0,.35,6.7); cam.lookAt(0,.05,0); TR = {r, sc, cam}; }
+    TR.r.setSize(size, size, false);
     const b = build3D(t, stg, mood); b.root.rotation.y = -.42; TR.sc.add(b.root); TR.r.render(TR.sc, TR.cam);
     const url = TR.r.domElement.toDataURL("image/png"); TR.sc.remove(b.root); b.own.forEach(x => x.dispose());
     THUMBS[key] = url; return url;
@@ -1186,6 +1329,7 @@ body.night .hero .hello{color:var(--c-lt)}
   }
   function liveSize(){ const w = Math.max(60, LV.el.clientWidth || 120); LV.r.setSize(w, w, false); LV.r.domElement.style.width = "100%"; LV.r.domElement.style.height = "100%"; LV.w = w; }
   function live(el, t, stg, mood="idle"){
+    LV.hero = false;
     if(!el) return;
     if(!HAS3D){ el.innerHTML = mascotSVG(t, mood, "", stg); return; }
     liveInit(); el.innerHTML = ""; el.appendChild(LV.r.domElement); LV.el = el;
@@ -1233,6 +1377,7 @@ body.night .hero .hello{color:var(--c-lt)}
     nodes.forEach(c => { if(c && c.g.userData.float) y += Math.sin(time*1.6)*.05; });
     if(LV.cur && LV.cur.g.userData.egg && !LV.evo){ const kk = time % 2.6; if(kk > 1.6 && kk < 2.3) rz = Math.sin((kk-1.6)*18)*.13*(1-(kk-1.6)/.7); }
     if(LV.react){ const p = (time - LV.react.t0)/LV.react.dur; if(p >= 1) LV.react = null; else if(LV.react.kind === "joy"){ y += Math.sin(p*Math.PI)*.75; extra = p*Math.PI*2; sq = 1 + Math.sin(p*Math.PI*2)*.07; } else rz = Math.sin(p*Math.PI*7)*.2*(1-p); }
+    if(LV.hero && LV.cur && !LV.evo){ const hop = Math.max(0, Math.sin(time*2.3)); y += hop*hop*.35; rz += Math.sin(time*3.4)*.16; extra += time*.9; sq = 1 - hop*.05; }
     const rot = -.38 + Math.sin(time*.6)*.42 + LV.drag + extra;
     nodes.forEach(c => {
       if(!c) return;
@@ -1332,7 +1477,7 @@ body.night .hero .hello{color:var(--c-lt)}
   }
 
   /* ---------- views ---------- */
-  const views = ["vWelcome","vHome","vTable","vPlay","vResult","vDiploma"];
+  const views = ["vWelcome","vHome","vTable","vPlay","vResult","vDiploma","vAlbum","vStickers"];
   let curT = 7;
   function show(v){ views.forEach(id => $(id).hidden = id!==v); scrollTo({top:0}); }
 
@@ -1354,14 +1499,9 @@ body.night .hero .hello{color:var(--c-lt)}
     }
     $("tables").innerHTML = html.join("");
     $("stDip").textContent = dips; $("stStars").textContent = st;
-    let got = 0;
-    const LABELS = ["Bebés","Primera evolución","Súper evolución"];
-    $("figs").innerHTML = [1,2,3].map(k => `<div class="album-stage"><h3>${LABELS[k-1]}</h3><div class="figs">${Array.from({length:10},(_,j)=>{
-      const t=j+1, has = stage(t) >= k, on = DARK_TEXT.has(t) ? "#1D2356" : "#fff"; if(has) got++;
-      return has ? `<button class="fig got" data-fig="${t}" data-k="${k}" style="${shades(t)}" title="${MASCOT[t].names[k-1]}" aria-label="${MASCOT[t].names[k-1]}, tabla del ${t}">${mascot(t,"idle","",k)}<small>${MASCOT[t].names[k-1]}</small></button>`
-                 : `<div class="fig empty" title="Todavía no la conseguiste">${mascot(t,"idle","",k)}<small>×${t}</small></div>`;
-    }).join("")}</div></div>`).join("");
-    $("albumCount").textContent = `${got} de 30 figuritas`;
+    const owned = ownedList();
+    $("albumCount").textContent = `${owned.length} de 30 figuritas`;
+    $("ctaThumbs").innerHTML = owned.slice(-4).map(([t,k]) => `<span style="${shades(t)}">${mascot(t,"idle","",k)}</span>`).join("");
     show("vHome");
   }
 
@@ -1392,7 +1532,7 @@ body.night .hero .hello{color:var(--c-lt)}
         : `<div class="btns"><button class="btn${sc?' ghost':''}" data-lvl="${i}">${sc?'Jugar de nuevo':'Empezar'}</button></div>`;
       return `<div class="stop${open?'':' is-locked'}" style="--off:${OFF[i]}">
         <div class="node-wrap">${i===current?hereHTML:""}<div class="node${open?'':' locked'}${sc?' done':''}${i===current?' current':''}">${open?ICONS[i]:LOCK}</div><span class="stars">${stars(sc)}</span></div>
-        <div class="sticker stop-card"><h3>${i+1}. ${L.name}</h3><p>${L.desc}</p>${REWARD[i] ? (()=>{ const [fs,txt,doneTxt] = REWARD[i], got = stg>=fs; return `<div class="reward"><span class="rw-m ${got?'':'hidden-form'}">${mascot(t,"idle","",fs)}</span><span>${got ? `${doneTxt} ${N[fs-1]}!` : txt}</span></div>`; })() : ""}${cta}</div>
+        <div class="sticker stop-card"><h3>${i+1}. ${L.name}</h3><p>${L.desc}</p>${REWARD[i] ? (()=>{ const [fs,txt,doneTxt] = REWARD[i], got = stg>=fs; return `<div class="reward"><span class="rw-m">${got ? mascot(t,"idle","",fs) : '<span class="rw-q">?</span>'}</span><span>${got ? `${doneTxt} ${N[fs-1]}!` : txt}</span></div>`; })() : ""}${cta}</div>
       </div>`;
     }).join("");
     const goal = `<div class="stop${d.dip?'':' is-locked'}" style="--off:${OFF[4]}">
@@ -1683,7 +1823,72 @@ body.night .hero .hello{color:var(--c-lt)}
   $("tables").addEventListener("pointermove", e => { const c = e.target.closest(".tcard"); if(!c || reduce) return; const r = c.getBoundingClientRect(); const x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5; c.style.setProperty("--ry", (x*18).toFixed(1)+"deg"); c.style.setProperty("--rx", (-y*18).toFixed(1)+"deg"); });
   $("tables").addEventListener("pointerout", e => { const c = e.target.closest(".tcard"); if(c && !c.contains(e.relatedTarget)){ c.style.removeProperty("--rx"); c.style.removeProperty("--ry"); } });
   $("tables").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if(b) renderTable(+b.dataset.t); });
-  $("figs").addEventListener("click", e => { const b = e.target.closest("[data-fig]"); if(!b) return; curT = +b.dataset.fig; if(b.dataset.k==="3") renderDiploma(curT); else renderTable(curT); });
+
+  /* ---------- álbum, fichas y stickers ---------- */
+  const STAGE_LABEL = ["Bebé","Evolución","Súper evolución"];
+  const STAGE_LEVEL = ["Aprender","Velocidad","Evaluación"];
+  const BASE = {1:[4,2,2],2:[2,5,2],3:[1,2,5],4:[4,3,1],5:[2,3,4],6:[3,3,2],7:[1,3,5],8:[3,2,3],9:[2,4,3],10:[5,1,2]};
+  const POWERS = {
+    1:[[["Chispazo","Enciende una llamita para dar calor a sus amigos."],["Rodada tibia","Rueda como una pelotita calentita."]],[["Puño de roca","Golpea con sus puños de piedra volcánica."],["Llama única","Su llama crece cuando se concentra."]],[["Erupción","Hace brotar lava de los volcanes de sus hombros."],["Corazón de magma","Su núcleo brilla y le da una fuerza enorme."]]],
+    2:[[["Salto nube","Salta tan alto que toca las nubes."],["Oído fino","Escucha un susurro a un kilómetro."]],[["Remolino","Gira y levanta una brisa fresca."],["Aleteo doble","Sus 2 alitas lo hacen planear."]],[["Huracán","Bate sus 2 alas gigantes y crea un tornado."],["Vuelo veloz","Cruza el cielo más rápido que el viento."]]],
+    3:[[["Mirada triple","Mira adelante y a los costados al mismo tiempo."],["Chispa mental","Adivina el número que estás pensando."]],[["Levitación","Flota sin tocar el suelo."],["Cristales guía","3 cristales le muestran el camino."]],[["Visión del futuro","Con sus 3 ojos ve lo que va a pasar."],["Tormenta psíquica","Hace girar cristales gigantes a su alrededor."]]],
+    4:[[["Suerte x4","Sus 4 manchas traen buena suerte."],["Bolita","Se hace bolita y nada lo lastima."]],[["Cuernazo","Empuja con su cuerno como un campeón."],["Coraza dura","Su caparazón es duro como la piedra."]],[["Lanza real","Defiende a todos los bichitos del jardín."],["Vuelo de élitros","Abre su caparazón y vuela alto."]]],
+    5:[[["Destello","Brilla en la oscuridad para que nadie tenga miedo."],["Deseo chiquito","Cumple deseos pequeños."]],[["Cola de cometa","Deja una estela de colores al correr."],["Polvo de estrellas","Espolvorea brillitos que dan energía."]],[["Escudo estelar","Su escudo de 5 puntas lo protege de todo."],["Explosión de luz","Ilumina la galaxia entera."]]],
+    6:[[["Gota dulce","Comparte miel con quien tiene hambre."],["Zumbido","Su zumbido tranquiliza a todos."]],[["Escudo panal","Se protege con un escudo de 6 lados."],["Aguijón cosquilla","En lugar de picar, hace cosquillas."]],[["Colmena real","Construye un panal de 6 celdas en un segundo."],["Cetro de miel","Su cetro endulza cualquier día feo."]]],
+    7:[[["Pintacielo","Pinta un arcoíris después de la lluvia."],["Nube suave","Es la almohada perfecta para descansar."]],[["Galope de colores","Cada paso deja 7 colores en el suelo."],["Brillo amigo","Hace sonreír a quien lo mira."]],[["Alas prisma","Sus alas de 7 colores iluminan la noche."],["Cuerno dorado","Su cuerno cura los raspones."]]],
+    8:[[["Tinta mágica","Escribe números en el agua con su tinta."],["Abrazo x8","Da 8 abrazos al mismo tiempo."]],[["Ancla firme","Nada lo mueve cuando se planta."],["Marinero experto","Conoce todos los mares del mundo."]],[["Remolino marino","Hace girar el agua a su alrededor."],["Tridente real","Manda sobre las olas del océano."]]],
+    9:[[["Cae parado","Siempre cae parado, pase lo que pase."],["Ronroneo","Su ronroneo da un sueñito rico."]],[["Hechizo de luna","Su bastón brilla con luz de luna."],["Paso sigiloso","Camina sin hacer ni un ruido."]],[["Nueve espíritus","9 orbes de luz lo cuidan todo el tiempo."],["Salto sombra","Aparece y desaparece entre las sombras."]]],
+    10:[[["Calculadora","Resuelve cuentas en un segundo."],["Luces amigas","Sus 10 luces se prenden cuando está feliz."]],[["Propulsión","Vuela con su mochila a chorro."],["Escáner","Encuentra cualquier cosa perdida."]],[["Súper fuerza","Levanta un camión con una sola mano."],["Núcleo de 10 luces","Su energía no se termina nunca."]]]
+  };
+  const dexNum = (t,k) => String((t-1)*3 + k).padStart(3,"0");
+  function ownedList(){ const out = []; for(let k=1;k<=3;k++) for(let t=1;t<=10;t++) if(stage(t) >= k) out.push([t,k]); return out; }
+  const Q = `<span class="fig-q" aria-hidden="true">?</span>`;
+  function renderAlbum(){
+    const owned = ownedList();
+    $("albumCount2").textContent = owned.length;
+    $("figs").innerHTML = [1,2,3].map(k => `<section class="album-stage"><h3>${STAGE_LABEL[k-1]==="Bebé"?"Bebés":STAGE_LABEL[k-1]}</h3><div class="figs">${Array.from({length:10},(_,j)=>{
+      const t = j+1, has = stage(t) >= k, nm = MASCOT[t].names[k-1];
+      return has ? `<button class="fig got" data-fig="${t}" data-k="${k}" style="${shades(t)}" aria-label="Ver ficha de ${nm}"><span class="fig-n">N.º ${dexNum(t,k)}</span>${mascot(t,"idle","",k)}<small>${nm}</small></button>`
+                 : `<div class="fig empty" title="Todavía no la conseguiste"><span class="fig-n">N.º ${dexNum(t,k)}</span>${Q}<small>???</small></div>`;
+    }).join("")}</div></section>`).join("");
+    show("vAlbum");
+  }
+  function openDex(t, k){
+    const nm = MASCOT[t].names[k-1], [f,v,m] = BASE[t], mul = [1,1.5,2][k-1];
+    const bar = (lbl, val) => { const n = Math.min(10, Math.round(val*mul)); return `<div class="stat"><span>${lbl}</span><i><b style="width:${n*10}%"></b></i><em>${n}</em></div>`; };
+    $("dexCard").setAttribute("style", shades(t));
+    $("dexInfo").innerHTML = `<p class="dex-num">N.º ${dexNum(t,k)} · Tabla del ${t}</p>
+      <h2 id="dexName">${nm}</h2>
+      <div class="dex-chips">${typeChip(t)}<span class="stage-chip">${STAGE_LABEL[k-1]}</span></div>
+      <div class="stats">${bar("Fuerza",f)}${bar("Velocidad",v)}${bar("Magia",m)}</div>
+      <h3>Poderes</h3>
+      <ul class="powers">${POWERS[t][k-1].map(([a,b]) => `<li><b>${a}</b><span>${b}</span></li>`).join("")}</ul>
+      <p class="dex-fact">${nm} tiene ${MASCOT[t].feat}.</p>
+      <p class="dex-got">Se consigue superando «${STAGE_LEVEL[k-1]}» en la tabla del ${t}.</p>`;
+    $("dex").hidden = false;
+    live($("dex3d"), t, k, "joy"); if(HAS3D) LV.react = {kind:"joy", t0:performance.now()/1000, dur:.8};
+    sOk(); $("dexClose").focus();
+  }
+  function closeDex(){ $("dex").hidden = true; }
+  function renderStickers(){
+    const who = ((S.name||"").trim() || "Mis stickers").replace(/[<>&]/g,"");
+    let cells = "";
+    for(let k=1;k<=3;k++) for(let t=1;t<=10;t++){
+      const has = stage(t) >= k;
+      cells += has ? `<div class="stk" style="${shades(t)}"><div class="stk-in">${HAS3D ? `<img src="${thumb(t,k,"joy",420)}" alt="">` : mascotSVG(t,"joy","",k)}<span>${MASCOT[t].names[k-1]}</span></div></div>`
+                   : `<div class="stk empty"><span>?</span></div>`;
+    }
+    const n = ownedList().length;
+    $("sheet").innerHTML = `<header class="sheet-head"><h2>Stickers de ${who}</h2><p>Misión Tablas · ${n} de 30 criaturas</p></header><div class="stk-grid">${cells}</div>`;
+    show("vStickers");
+  }
+  $("albumBtn").addEventListener("click", renderAlbum);
+  $("stickerBtn").addEventListener("click", renderStickers);
+  $("stBack").addEventListener("click", renderAlbum);
+  $("printBtn").addEventListener("click", () => { try{ window.print(); }catch(e){} });
+  $("dexClose").addEventListener("click", closeDex);
+  $("dex").addEventListener("click", e => { if(e.target.id === "dex") closeDex(); });
+  $("figs").addEventListener("click", e => { const b = e.target.closest("[data-fig]"); if(!b) return; openDex(+b.dataset.fig, +b.dataset.k); });
   $("path").addEventListener("click", e => {
     const b = e.target.closest("[data-lvl]"); if(b) startLevel(curT, +b.dataset.lvl);
     if(e.target.closest("[data-dip]")) renderDiploma(curT);
@@ -1710,11 +1915,6 @@ body.night .hero .hello{color:var(--c-lt)}
   (() => {
     let k=0;
     $("wTitle").innerHTML = [..."Misión Tablas"].map((ch,i)=> ch===" " ? `<span class="ltr" style="--d:${i*55}ms">&nbsp;</span>` : `<span class="ltr" aria-hidden="true" style="--lc:${TITLE_COLORS[(k++)%TITLE_COLORS.length]};--d:${i*55}ms">${ch}</span>`).join("");
-    const facts = ["2×3","6","5×5","25","4×9","36","7×8","56","×","=","3×7","21","9×9","81","10×4","40","6×6","8×3"];
-    $("wRain").innerHTML = facts.map((f,i)=>{
-      const t = 1 + (i % 9), on = DARK_TEXT.has(t) ? "#1D2356" : "#fff";
-      return `<span style="left:${(i*37)%96}%;--c:${COLORS[t]};--on-c:${on};--fs:${16+(i*7)%16}px;--dur:${11+(i*5)%9}s;--del:-${(i*1.7)%14}s;--r0:${(i*23)%40-20}deg;--r1:${(i*31)%90-45}deg">${f}</span>`;
-    }).join("");
   })();
   let prevName = "";
   function paintPreview(){
@@ -1730,8 +1930,8 @@ body.night .hero .hello{color:var(--c-lt)}
   function renderWelcome(){
     $("wName").value = S.name || ""; prevName=""; paintPreview(); $("wErr").hidden = true; show("vWelcome"); setTimeout(()=>$("wName").focus(), 50);
     if(HAS3D){
-      let k = 1; live($("w3d"), k, 0); setColor(document.body, k); clearInterval(showT);
-      showT = setInterval(() => { if($("vWelcome").hidden){ clearInterval(showT); return; } k = k % 10 + 1; setColor(document.body, k); liveSet(k, 0, "idle"); LV.react = {kind:"joy", t0:performance.now()/1000, dur:.8}; }, 2600);
+      let k = 1; live($("w3d"), k, 0); LV.hero = true; setColor(document.body, k); clearInterval(showT);
+      showT = setInterval(() => { if($("vWelcome").hidden){ clearInterval(showT); return; } k = k % 10 + 1; setColor(document.body, k); liveSet(k, 0, "idle"); }, 3200);
     }
   }
   $("wForm").addEventListener("submit", e => {
@@ -1758,6 +1958,7 @@ body.night .hero .hello{color:var(--c-lt)}
   });
 
   document.addEventListener("keydown", e => {
+    if(e.key==="Escape" && !$("dex").hidden){ closeDex(); return; }
     if(e.key==="Escape" && !$("vPlay").hidden){ stopGame(); renderTable(curT); }
     if(!$("vPlay").hidden && G && document.activeElement!==ansEl && /^\d$/.test(e.key) && !ansEl.disabled){ ansEl.focus(); }
   });
