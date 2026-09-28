@@ -599,7 +599,9 @@ body.night .spark{opacity:.9}
 .rv-lvl{font-weight:900; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft)}
 .rv-img{width:70%}
 .rv-state{font-weight:900; font-size:13px; padding:3px 12px; border-radius:999px; background:var(--c); color:var(--on-c); border:2px solid var(--ink)}
-.rival.locked{cursor:not-allowed; filter:grayscale(.85) opacity(.65)}
+.rival.locked{cursor:not-allowed; background:color-mix(in srgb, var(--card) 70%, transparent)}
+.rival.locked .rv-img .mascot{filter:brightness(0); opacity:.3; animation:none}
+.rival.locked .rv-state{background:var(--locked); color:var(--ink-soft); border-color:var(--locked-line)}
 .rival.won .rv-state{background:var(--ok); color:#fff}
 .team-bar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; margin-bottom:16px; flex-wrap:wrap; position:sticky; top:env(safe-area-inset-top,0px); z-index:5}
 .team-slots{display:flex; gap:10px}
@@ -2426,8 +2428,8 @@ body.night .spark{opacity:.9}
       return `<button class="sticker rival${open?'':' locked'}${won?' won':''}" data-rival="${i}" ${open?'':'disabled'} style="${shades(r.id)}">
         <span class="rv-lvl">Rival ${i+1}${i===RIVALS.length-1?' · Jefe final':''}</span>
         <span class="rv-img">${mascot(r.id,"idle","",1)}</span>
-        <b>${nm}</b>${typeChip(r.id)}
-        <span class="rv-rec">❤ ${r.hp} de vida · Poder sugerido: ${r.rec}</span><span class="rv-tabs">Tablas: ${r.tabs.slice(0,-1).join(", ")} y ${r.tabs[r.tabs.length-1]}</span>
+        ${open ? `<b>${nm}</b>${typeChip(r.id)}
+        <span class="rv-rec">❤ ${r.hp} de vida · Poder sugerido: ${r.rec}</span>` : `<b>???</b><span class="rv-rec">Criatura misteriosa</span>`}<span class="rv-tabs">Tablas: ${r.tabs.slice(0,-1).join(", ")} y ${r.tabs[r.tabs.length-1]}</span>
         <span class="rv-state">${won ? '✓ ¡Ya es tuyo!' : open ? '¡Desafiar!' : 'Bloqueado'}</span>
       </button>`;
     }).join("");
