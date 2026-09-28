@@ -665,6 +665,26 @@ body.night .spark{opacity:.9}
 .fxp.rainbow svg{width:90px; height:50px}
 .fxp.math b{font-size:26px}
 
+.rv-tabs{font-weight:900; font-size:12px; color:var(--ink); background:color-mix(in srgb, var(--gold) 35%, transparent); border-radius:999px; padding:1px 10px}
+.rv-rec{font-weight:800; font-size:12px; color:var(--ink-soft)}
+.plvl{position:absolute; bottom:26px; left:50%; transform:translateX(-50%); font-weight:900; font-size:10px; background:var(--ink); color:var(--card); border-radius:999px; padding:1px 7px; white-space:nowrap; z-index:2}
+.pmeter{flex:1; min-width:220px; display:grid; gap:4px}
+.pm-row{display:flex; justify-content:space-between; font-weight:800; font-size:13px; color:var(--ink-soft)}
+.pm-row b{font-family:var(--display); font-weight:400; font-size:18px; color:var(--ink)}
+.pm-bar{position:relative; height:12px; border-radius:8px; background:color-mix(in srgb, var(--ink) 12%, transparent); overflow:visible}
+.pm-bar i{display:block; height:100%; border-radius:8px; transition:width .35s}
+.pm-bar em{position:absolute; top:-4px; width:3px; height:20px; background:var(--ink); border-radius:2px}
+.pm-bar i.ok{background:var(--ok)} .pm-bar i.mid{background:#E8A317} .pm-bar i.hard{background:#FF8A5B} .pm-bar i.vhard{background:var(--bad)}
+.pm-verdict{font-weight:900; font-size:13px}
+.pm-verdict.ok{color:var(--ok)} .pm-verdict.mid{color:#B7790A} .pm-verdict.hard{color:#E0602F} .pm-verdict.vhard{color:var(--bad)}
+.critbar.def i{background:linear-gradient(90deg,#8FD8FF,#5B6EE8)}
+
+.bswitch{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:var(--ink-soft)}
+.bswitch > span{width:100%; text-align:center}
+.sw{display:flex; align-items:center; gap:6px; padding:4px 12px 4px 4px; border-radius:999px; border:2.5px solid var(--ink); background:linear-gradient(180deg, var(--c-lt), var(--c)); color:var(--on-c); cursor:pointer; box-shadow:0 3px 0 var(--shadow)}
+.sw .mascot{width:40px}
+.sw small{font-weight:900; font-size:13px}
+
 #fx{position:fixed; inset:0; pointer-events:none; z-index:50}
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important}
@@ -812,7 +832,7 @@ body.night .spark{opacity:.9}
     </section>
     <section id="bTeam" hidden>
       <header class="album-hero"><h1 id="bTeamTitle">Elegí tu equipo</h1><p id="bTeamHint"></p></header>
-      <div class="team-bar sticker"><div class="team-slots" id="bSlots"></div><button class="btn" id="bGo" disabled>¡A la batalla!</button></div>
+      <div class="team-bar sticker"><div class="team-slots" id="bSlots"></div><div class="pmeter" id="bMeter"></div><button class="btn" id="bGo" disabled>¡A la batalla!</button></div>
       <div class="figs team-pick" id="bPick"></div>
     </section>
     <section id="bFight" hidden>
@@ -844,8 +864,8 @@ body.night .spark{opacity:.9}
 <script>
 (() => {
   /* ---------- data ---------- */
-  const COLORS = {1:"#FF5A5F",2:"#FF8C42",3:"#FFC23C",4:"#8AC926",5:"#1FB8A8",6:"#1982C4",7:"#6A4C93",8:"#C04CFD",9:"#FF4F9A",10:"#2D3047", x1:"#E8483C", x2:"#7FC8F0", x3:"#B08968", x4:"#FF8FC8", x5:"#FFD23F", x6:"#5B6EE8"};
-  const EXTRA_IDS = ["x1","x2","x3","x4","x5","x6"];
+  const COLORS = {1:"#FF5A5F",2:"#FF8C42",3:"#FFC23C",4:"#8AC926",5:"#1FB8A8",6:"#1982C4",7:"#6A4C93",8:"#C04CFD",9:"#FF4F9A",10:"#2D3047", x1:"#E8483C", x2:"#7FC8F0", x3:"#B08968", x4:"#FF8FC8", x5:"#FFD23F", x6:"#5B6EE8", x7:"#5FB84A", x8:"#8FD3F4", x9:"#3FB6C8", x10:"#E3C27A", x11:"#4B3F9E", x12:"#AEB6E8", x13:"#FF6A2C"};
+  const EXTRA_IDS = ["x7","x8","x9","x10","x4","x11","x12","x5","x13","x6"];
   const isX = t => typeof t === "string" && t[0] === "x";
   const DARK_TEXT = new Set([3,4]);
   const LEVELS = [
@@ -871,6 +891,7 @@ body.night .spark{opacity:.9}
   const mixHex = (a, b, k) => { const pa = parseInt(a.slice(1),16), pb = parseInt(b.slice(1),16); const ch = sh => Math.round(((pa>>sh)&255)*(1-k) + ((pb>>sh)&255)*k); return "#" + [16,8,0].map(sh => ch(sh).toString(16).padStart(2,"0")).join(""); };
   const shades = t => `--c:${COLORS[t]};--c-lt:${mixHex(COLORS[t],"#ffffff",.35)};--c-dk:${mixHex(COLORS[t],"#000000",.22)};--on-c:${DARK_TEXT.has(t) ? "#1D2356" : "#fff"}`;
   const setColor = (el, t) => { el.style.setProperty("--c", COLORS[t]); el.style.setProperty("--c-lt", mixHex(COLORS[t],"#ffffff",.35)); el.style.setProperty("--c-dk", mixHex(COLORS[t],"#000000",.22)); el.style.setProperty("--on-c", DARK_TEXT.has(t) ? "#1D2356" : "#FFFFFF"); };
+  if(!S.arena2){ S.x = {}; S.medals = 0; S.arena2 = 1; save(); }
   let TEACHER = false, TEACH_OPEN = false;
   S.teacher = false; save();
   const unlocked = (t, i) => TEACH_OPEN || i===0 || S.t[t].s[i-1] > 0;
@@ -894,7 +915,14 @@ body.night .spark{opacity:.9}
     x3:{names:["Rocadillo","Rocadillo","Rocadillo"], type:"Tierra", tc:"#8A6A4A", feat:"una coraza de piedra que se hace bolita"},
     x4:{names:["Melodín","Melodín","Melodín"], type:"Música", tc:"#E85FA8", feat:"una cresta con forma de nota musical"},
     x5:{names:["Chispón","Chispón","Chispón"], type:"Rayo", tc:"#E0A800", feat:"tentáculos que chisporrotean"},
-    x6:{names:["Dracón","Dracón","Dracón"], type:"Dragón", tc:"#4B5BD6", feat:"alas, cuernos y una corona de campeón"}
+    x6:{names:["Dracón","Dracón","Dracón"], type:"Dragón", tc:"#4B5BD6", feat:"alas, cuernos y una corona de campeón"},
+    x7:{names:["Pinchito","Pinchito","Pinchito"], type:"Planta", tc:"#4FA84A", feat:"espinas suaves y una flor en la cabeza"},
+    x8:{names:["Carámbano","Carámbano","Carámbano"], type:"Hielo", tc:"#4AA8D8", feat:"cristales de hielo que giran a su alrededor"},
+    x9:{names:["Caracolina","Caracolina","Caracolina"], type:"Mar", tc:"#1F9DB0", feat:"un caparazón en espiral"},
+    x10:{names:["Arenón","Arenón","Arenón"], type:"Tierra", tc:"#B8914A", feat:"dos torres con banderines"},
+    x11:{names:["Buholín","Buholín","Buholín"], type:"Noche", tc:"#4B3F9E", feat:"ojos enormes para ver en la oscuridad"},
+    x12:{names:["Bruma","Bruma","Bruma"], type:"Niebla", tc:"#7E88C8", feat:"un farolito que nunca se apaga"},
+    x13:{names:["Fenixín","Fenixín","Fenixín"], type:"Fuego", tc:"#FF6B2C", feat:"alas de fuego que renacen"}
   };
   const stage = t => { if(isX(t)) return S.x && S.x[t] ? 1 : 0; const d = S.t[t]; return d.dip ? 3 : d.s[2]>0 && d.s[0]>0 ? 2 : d.s[0]>0 ? 1 : 0; };
   const formName = (t, stg) => stg>0 ? MASCOT[t].names[stg-1] : "Huevo";
@@ -1157,7 +1185,62 @@ body.night .spark{opacity:.9}
 
     /* criaturas extra de la arena */
     if(isX(t)){
-      if(t==="x1"){
+      if(t==="x7"){
+        feet("#3E8A3A",-1.15,.3); 
+        body = {c:[0,-.2,0], r:[.68,.98,.62]}; sph(g,C,body.c,body.r);
+        [-1,1].forEach(sg => { tube(g,[[sg*.6,-.25,0],[sg*1.0,-.25,0],[sg*1.05,.25,0]],.17,C); });
+        [[.0,.62,.45],[.35,.35,.5],[-.35,.35,.5],[.55,-.1,.35],[-.55,-.1,.35],[.3,-.65,.5],[-.3,-.65,.5],[0,-.2,-.62],[.45,.4,-.4],[-.45,.4,-.4]].forEach(([x,y,z]) => { const m = add(g, CONE, M("#F4FFE8"), [x,y,z], [.035,.12,.035], [0,0,0], 0); m.lookAt(x*3, y*1.2+.5, z*3); m.rotateX(Math.PI/2); });
+        for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; sph(g,"#FF7FB0",[Math.cos(a)*.2,.86,Math.sin(a)*.2],[.16,.08,.16],{ol:.02}); } sph(g,"#FFD84D",[0,.9,0],[.12,.08,.12],{ol:.02});
+        face(body,{y:-.05, s:.78});
+      } else if(t==="x8"){
+        const o = orbit(0, 1.2, .3); for(let i=0;i<4;i++){ const a = i/4*Math.PI*2; gem(o,"#BDEBFF",[Math.cos(a)*1.35,Math.sin(a*2)*.2,Math.sin(a)*1.35],[.12,.3,.12]); }
+        body = {c:[0,0,0], r:[.82,.82,.78]}; sph(g,C,body.c,body.r,{m:{roughness:.15, metalness:.1}});
+        [[-.45,.72,0,-.5,.4],[0,.92,0,0,.55],[.45,.72,0,.5,.4],[-.8,.1,0,-1.2,.3],[.8,.1,0,1.2,.3]].forEach(([x,y,z,rz,h]) => gem(g,"#E6F7FF",[x,y,z],[.13,h,.13],[0,0,rz]));
+        sph(g,"#FFFFFF",[-.35,.35,.62],[.14,.09,.04],{m:{transparent:true, opacity:.7}, ol:0, rot:[0,-.4,.5]});
+        face(body,{y:-.05, s:.8}); g.userData.float = 1;
+      } else if(t==="x9"){
+        sph(g,C,[.1,-.95,0],[1.05,.32,.42]);
+        const shell = "#FF9EC4"; sph(g,shell,[-.3,.0,-.05],[.78,.8,.52]);
+        const pts = []; for(let i=0;i<=40;i++){ const a = i/40*Math.PI*5, r = .7*(1 - i/46); pts.push([-.3 + Math.cos(a)*r, Math.sin(a)*r*.95, .5 + (1-i/40)*.02]); }
+        tube(g, pts, .035, "#C2477F", {ol:0});
+        [-1,1].forEach(sg => { tube(g,[[.85+sg*.12,-.05,.12],[.9+sg*.2,.35,.1],[.95+sg*.25,.6,.05]],.04,C,{ol:0}); sph(g,"#FFD84D",[.95+sg*.25,.64,.05],[.08,.08,.08]); });
+        body = {c:[.85,-.4,.12], r:[.42,.4,.38]}; sph(g,C,body.c,body.r);
+        face(body,{x0:.85, y:-.4, s:.58});
+      } else if(t==="x10"){
+        feet("#B8914A",-1.15,.4);
+        rbox(g,1.6,1.05,1.0,C,[0,-.55,0]);
+        [-1,1].forEach(sg => { add(g, CYL, M(C), [sg*.62,.22,0], [.3,.95,.3]); for(let i=0;i<4;i++){ const a = i/4*Math.PI*2 + .4; add(g, BOX, M(C), [sg*.62+Math.cos(a)*.24,.75,Math.sin(a)*.24], [.12,.14,.12], [0,-a,0], .02); } add(g, CYL, M(INKHEX), [sg*.62,1.0,0], [.02,.5,.02], [0,0,0], 0); add(g, CONE, M(sg<0 ? "#FF5A5F" : "#1982C4"), [sg*.62+.12,1.15,0], [.08,.22,.02], [0,0,-Math.PI/2], .02); });
+        for(let i=0;i<5;i++) add(g, BOX, M(C), [-.64+i*.32,0,0], [.16,.16,.5], [0,0,0], .02);
+        [[-.5,-.9],[.45,-.3],[.2,-.95],[-.3,-.35]].forEach(([x,y]) => sph(g,"#FFE8B0",[x,y,.51],[.05,.05,.02],{ol:0}));
+        face({flat:.52},{y:-.5, s:.72});
+      } else if(t==="x11"){
+        feet("#FFB703",-1.12,.28,.15,.8);
+        [-1,1].forEach(sg => { sph(g,mixHex(C,"#000",.2),[sg*.82,-.15,-.05],[.25,.6,.2],{rot:[0,0,sg*.2]}); add(g, CONE, M(C), [sg*.45,.95,0], [.14,.35,.12], [0,0,-sg*.35]); });
+        body = {c:[0,-.05,0], r:[.85,1.0,.8]}; sph(g,C,body.c,body.r);
+        sph(g,"#D8D0FF",[0,-.45,.5],[.5,.5,.28],{ol:0});
+        [-1,1].forEach(sg => { const p = onBody(body, sg*.3, .2, .01); add(p, SPH, M("#FFFFFF"), [0,0,0], [.25,.25,.04], [0,0,0], .025); });
+        const bp = onBody(body, 0, .05); add(bp, CONE, M("#FFB703"), [0,0,.04], [.07,.12,.07], [Math.PI,0,0], .02);
+        const mp = onBody(body, 0, -.45); add(mp, O(new T3.TorusGeometry(.12,.035,8,18,Math.PI*1.3)), M("#FFD84D",{emissive:"#FFB703", emissiveIntensity:.4}), [0,0,.02], [1,1,1], [0,0,-.6], .02);
+        face(body,{y:.2, s:.82, spread:.37});
+      } else if(t==="x12"){
+        const mist = {m:{transparent:true, opacity:.88, roughness:.5}};
+        body = {c:[0,.1,0], r:[.8,.95,.75]}; sph(g,C,body.c,body.r,mist);
+        for(let i=0;i<6;i++){ const a = i/6*Math.PI*2; sph(g,C,[Math.cos(a)*.55,-.72,Math.sin(a)*.5],[.28,.34,.28],mist); }
+        tube(g,[[.65,-.1,.25],[1.05,-.05,.35],[1.15,-.35,.4]],.07,C,mist);
+        add(g, CYL, M(INKHEX), [1.15,-.52,.4], [.02,.25,.02], [0,0,0], 0); add(g, CYL, M("#8A6A4A"), [1.15,-.66,.4], [.16,.06,.16]); sph(g,"#FFE27A",[1.15,-.82,.4],[.14,.18,.14],{m:{emissive:"#FFC400", emissiveIntensity:.9}});
+        const o = orbit(-.2, .6, .2); for(let i=0;i<5;i++){ const a = i/5*Math.PI*2; sph(o,"#FFFFFF",[Math.cos(a)*1.4,Math.sin(a*3)*.15,Math.sin(a)*1.4],[.18,.12,.18],{m:{transparent:true, opacity:.5}, ol:0}); }
+        face(body,{y:.15, s:.85}); g.userData.float = 1;
+      } else if(t==="x13"){
+        const warm = ["#FF6A2C","#FFB703","#FF4F5A"];
+        fan([-.4,.1,-.3],-1,6,1.4,warm,60,170,-.01,.12); fan([.4,.1,-.3],1,6,1.4,warm,60,170,-.01,.12);
+        [["#FFB703",-.25],["#FF6A2C",0],["#FF4F5A",.25]].forEach(([col,dx]) => tube(g,[[dx*.5,-.6,-.35],[dx,-1.0,-.7],[dx*1.6,-1.3,-.9]],.08,col,{m:{emissive:col, emissiveIntensity:.25}}));
+        [-1,1].forEach(sg => { tube(g,[[sg*.22,-.6,0],[sg*.24,-.95,.05],[sg*.25,-1.18,.1]],.05,"#FFB703"); });
+        sph(g,C,[0,-.25,0],[.62,.62,.55]); sph(g,"#FFD8A8",[0,-.3,.34],[.38,.42,.22],{ol:0});
+        body = {c:[0,.55,.1], r:[.46,.44,.44]}; sph(g,C,body.c,body.r);
+        flame(g,[0,1.1,0],.35); flame(g,[-.18,1.02,-.05],.25,[0,0,.4]); flame(g,[.18,1.02,-.05],.25,[0,0,-.4]);
+        const bp = onBody(body, 0, .5); add(bp, CONE, M("#FFD84D"), [0,0,.05], [.07,.14,.07], [Math.PI,0,0], .02);
+        face(body,{y:.62, s:.62, spread:.38});
+      } else if(t==="x1"){
         feet("#F4E6CF",-1.1,.34); arms("#F4E6CF",-.45,.7,.05,.85);
         body = {c:[0,-.45,0], r:[.62,.62,.58]}; sph(g,"#F4E6CF",body.c,body.r);
         sph(g,C,[0,.35,0],[1.15,.62,1.1]); sph(g,"#F4E6CF",[0,.05,0],[.95,.12,.9],{ol:.02});
@@ -1505,7 +1588,7 @@ body.night .spark{opacity:.9}
     }
     // normalize size & position
     const box = new T3.Box3().setFromObject(g), size = box.getSize(new T3.Vector3()), ctr = box.getCenter(new T3.Vector3());
-    const target = isX(t) ? (t==="x6" ? 2.95 : 2.5) : [2.15, 1.95, 2.55, 3.05][stg];
+    const target = isX(t) ? (t==="x6" || t==="x13" ? 2.95 : 2.5) : [2.15, 1.95, 2.55, 3.05][stg];
     const k = Math.min(target/size.y, (stg===3 ? 3.4 : 3.1)/Math.max(size.x, size.z*.8));
     const rz = g.rotation.z;
     g.scale.setScalar(k); g.position.set(-ctr.x*k, -box.min.y*k - 1.42, -ctr.z*k);
@@ -1598,7 +1681,14 @@ body.night .spark{opacity:.9}
     x3:[["bola","¡Bola de roca!","sleep","roll","rock",[196,220]],["temblor","¡Terremoto!","surprise","buzz","dust",[165,196]]],
     x4:[["cancion","¡La la la!","joy","dance","note",[523,659,784,1047]],["agudo","¡Nota aguda!","surprise","stretch","note",[1568,1760]]],
     x5:[["descarga","¡Descarga!","surprise","buzz","bolt",[1568,1760,1568]],["tormenta","¡Tormenta!","joy","float","bolt",[523,784]]],
-    x6:[["llamarada","¡Llamarada azul!","joy","sneeze","flame",[330,1175]],["rugido","¡Rugido de campeón!","surprise","stretch","bang",[196,262,330]]]
+    x6:[["llamarada","¡Llamarada azul!","joy","sneeze","flame",[330,1175]],["rugido","¡Rugido de campeón!","surprise","stretch","bang",[196,262,330]]],
+    x7:[["flor","¡Florcita!","love","stretch","sparkle",[784,988]],["pinchazo","¡Ay, mis espinas!","surprise","buzz","leaf",[1175,880]]],
+    x8:[["cristales","¡Lluvia de cristales!","joy","spin","snow",[1319,1568,1319]],["congelado","¡Me congelé!","surprise","stretch","snow",[880,1760]]],
+    x9:[["escondida","¡Me escondo!","sleep","vanish","bubble",[392,523]],["marea","¡Marea alta!","joy","float","bubble",[523,659,784]]],
+    x10:[["derrumbe","¡Derrumbe de arena!","surprise","buzz","dust",[196,165]],["banderines","¡Banderines al viento!","joy","dance","wind",[659,784,659]]],
+    x11:[["uhuu","¡Uuuh, uuuh!","joy","tilt","moon",[392,330,392]],["vueloNoche","¡Vuelo nocturno!","wink","levitate","star",[523,659,784]]],
+    x12:[["buu","¡Buuu!","surprise","startle","smoke",[330,262]],["farol","¡Luz del farol!","joy","float","sparkle",[659,880]]],
+    x13:[["renacer","¡Renacer de las llamas!","joy","vanish","flameRing",[523,784,1047,1568]],["aleteo","¡Aleteo ardiente!","joy","hop3","flameUp",[659,784,988]]]
   });
   const TAP_POOL = ["saludo","salto","amor","sorpresa","sueno","risa","guino","baile"];
   const AUTO_POOL = ["guino","saludo","sueno","risa","amor"];
@@ -1773,6 +1863,7 @@ body.night .spark{opacity:.9}
     LV.r.render(LV.sc, LV.cam);
   }
   let STG_AFTER = 1;
+
 
 
 
@@ -2210,7 +2301,7 @@ body.night .spark{opacity:.9}
   /* ---------- álbum, fichas y stickers ---------- */
   const STAGE_LABEL = ["Bebé","Evolución","Súper evolución"];
   const STAGE_LEVEL = ["Aprender","Velocidad","Evaluación"];
-  const BASE = {1:[4,2,2],2:[2,5,2],3:[1,2,5],4:[4,3,1],5:[2,3,4],6:[3,3,2],7:[1,3,5],8:[3,2,3],9:[2,4,3],10:[5,1,2], x1:[3,3,5], x2:[4,4,4], x3:[6,2,3], x4:[3,5,5], x5:[4,6,5], x6:[7,5,6]};
+  const BASE = {x7:[3,2,4], x8:[3,4,5], x9:[4,2,4], x10:[5,2,3], x11:[3,5,5], x12:[3,5,6], x13:[6,5,5], 1:[4,2,2],2:[2,5,2],3:[1,2,5],4:[4,3,1],5:[2,3,4],6:[3,3,2],7:[1,3,5],8:[3,2,3],9:[2,4,3],10:[5,1,2], x1:[3,3,5], x2:[4,4,4], x3:[6,2,3], x4:[3,5,5], x5:[4,6,5], x6:[7,5,6]};
   const POWERS = {
     1:[[["Chispazo","Enciende una llamita para dar calor a sus amigos."],["Rodada tibia","Rueda como una pelotita calentita."]],[["Puño de roca","Golpea con sus puños de piedra volcánica."],["Llama única","Su llama crece cuando se concentra."]],[["Erupción","Hace brotar lava de los volcanes de sus hombros."],["Corazón de magma","Su núcleo brilla y le da una fuerza enorme."]]],
     2:[[["Salto nube","Salta tan alto que toca las nubes."],["Oído fino","Escucha un susurro a un kilómetro."]],[["Remolino","Gira y levanta una brisa fresca."],["Aleteo doble","Sus 2 alitas lo hacen planear."]],[["Huracán","Bate sus 2 alas gigantes y crea un tornado."],["Vuelo veloz","Cruza el cielo más rápido que el viento."]]],
@@ -2223,9 +2314,16 @@ body.night .spark{opacity:.9}
     9:[[["Cae parado","Siempre cae parado, pase lo que pase."],["Ronroneo","Su ronroneo da un sueñito rico."]],[["Hechizo de luna","Su bastón brilla con luz de luna."],["Paso sigiloso","Camina sin hacer ni un ruido."]],[["Nueve espíritus","9 orbes de luz lo cuidan todo el tiempo."],["Salto sombra","Aparece y desaparece entre las sombras."]]],
     10:[[["Calculadora","Resuelve cuentas en un segundo."],["Luces amigas","Sus 10 luces se prenden cuando está feliz."]],[["Propulsión","Vuela con su mochila a chorro."],["Escáner","Encuentra cualquier cosa perdida."]],[["Súper fuerza","Levanta un camión con una sola mano."],["Núcleo de 10 luces","Su energía no se termina nunca."]]]
   };
-  const dexNum = (t,k) => isX(t) ? "E" + t.slice(1) : String((t-1)*3 + k).padStart(3,"0");
+  const dexNum = (t,k) => isX(t) ? "E" + (EXTRA_IDS.indexOf(t) + 1) : String((t-1)*3 + k).padStart(3,"0");
   const XP = [[["Esporas dormilonas","Suelta esporas que dan sueño."],["Látigo de raíz","Atrapa con sus raíces."]],[["Aliento helado","Congela todo con un soplido."],["Granizo","Hace caer granizo del cielo."]],[["Bola de roca","Se hace bolita y rueda con fuerza."],["Terremoto","Hace temblar el suelo."]],[["Canción de cuna","Canta tan lindo que todos se duermen."],["Nota aguda","Un grito musical que aturde."]],[["Chispazo","Da una descarga eléctrica."],["Tormenta","Llama a los rayos de las nubes."]],[["Llamarada de dragón","Echa fuego azul por la boca."],["Vuelo real","Vuela alto y cae con todo."]]];
-  const POWERS_X = {x1:XP[0], x2:XP[1], x3:XP[2], x4:XP[3], x5:XP[4], x6:XP[5]};
+  const POWERS_X = {x1:XP[0], x2:XP[1], x3:XP[2], x4:XP[3], x5:XP[4], x6:XP[5],
+    x7:[["Pinchos voladores","Lanza sus espinas suaves."],["Polen dormilón","Su flor suelta polen que da sueño."]],
+    x8:[["Rayo de hielo","Congela todo lo que toca."],["Escudo de cristal","Sus cristales lo protegen."]],
+    x9:[["Chorro de agua","Dispara agua desde su caparazón."],["Caparazón giratorio","Se esconde y gira como un trompo."]],
+    x10:[["Tormenta de arena","Levanta arena y nadie ve nada."],["Muralla","Levanta una pared de arena dura."]],
+    x11:[["Mirada nocturna","Sus ojos brillan y asustan."],["Vuelo silencioso","Ataca sin hacer ni un ruido."]],
+    x12:[["Niebla espesa","Llena todo de niebla."],["Farol encantado","Su luz confunde a los rivales."]],
+    x13:[["Llamarada de fénix","Envuelve todo en fuego."],["Renacer","Vuelve a levantarse más fuerte."]]};
   function ownedList(){ const out = []; for(let k=1;k<=3;k++) for(let t=1;t<=10;t++) if(stage(t) >= k) out.push([t,k]); return out; }
   const Q = `<span class="fig-q" aria-hidden="true">?</span>`;
   function renderAlbum(){
@@ -2269,7 +2367,7 @@ body.night .spark{opacity:.9}
     }
     EXTRA_IDS.forEach(t => { cells += stage(t) ? `<div class="stk" style="${shades(t)}"><div class="stk-in">${HAS3D ? `<img src="${thumb(t,1,"joy",420)}" alt="">` : mascot(t,"joy","",1)}<span>${MASCOT[t].names[0]}</span></div></div>` : `<div class="stk empty"><span>?</span></div>`; });
     const n = ownedList().length + EXTRA_IDS.filter(t => stage(t)).length;
-    $("sheet").innerHTML = `<header class="sheet-head"><h2>Stickers de ${who}</h2><p>Misión Tablas · ${n} de 36 criaturas</p></header><div class="stk-grid">${cells}</div>`;
+    $("sheet").innerHTML = `<header class="sheet-head"><h2>Stickers de ${who}</h2><p>Misión Tablas · ${n} de ${30 + EXTRA_IDS.length} criaturas</p></header><div class="stk-grid">${cells}</div>`;
     show("vStickers");
   }
   $("albumBtn").addEventListener("click", renderAlbum);
@@ -2281,14 +2379,24 @@ body.night .spark{opacity:.9}
   $("dex").addEventListener("click", e => { if(e.target.id === "dex") closeDex(); });
   /* ================= ARENA DE BATALLA ================= */
   const RIVALS = [
-    {id:"x1", hp:45, atk:6, weak:["Fuego","Viento","Bicho"]},
-    {id:"x2", hp:60, atk:7, weak:["Fuego","Acero"]},
-    {id:"x3", hp:75, atk:8, weak:["Agua","Panal"]},
-    {id:"x4", hp:90, atk:10, weak:["Sombra","Psíquico"]},
-    {id:"x5", hp:105, atk:11, weak:["Acero","Hada"]},
-    {id:"x6", hp:135, atk:13, weak:["Hada","Cósmico"]}
+    {id:"x7",  hp:60,  atk:7,  rec:4,  secs:12, tabs:[1,2,10], easy:1,  weak:["Fuego","Viento","Bicho"]},
+    {id:"x8",  hp:90,  atk:9,  rec:6,  secs:12, tabs:[2,5,10], easy:1,  weak:["Fuego","Acero"]},
+    {id:"x9",  hp:120, atk:12, rec:9,  secs:11, tabs:[2,3,5],  easy:1,  weak:["Panal","Viento"]},
+    {id:"x10", hp:155, atk:15, rec:12, secs:10, tabs:[3,4,5],  easy:1,  weak:["Agua","Panal"]},
+    {id:"x4",  hp:195, atk:18, rec:15, secs:10, tabs:[3,4,6],  easy:0,  weak:["Sombra","Psíquico"]},
+    {id:"x11", hp:240, atk:22, rec:19, secs:9,  tabs:[4,6,9],  easy:0,  weak:["Cósmico","Hada"]},
+    {id:"x12", hp:290, atk:26, rec:23, secs:8,  tabs:[6,7,9],  easy:0,  weak:["Viento","Fuego"]},
+    {id:"x5",  hp:345, atk:30, rec:27, secs:8,  tabs:[6,7,8,9], easy:0, weak:["Acero","Hada"]},
+    {id:"x13", hp:405, atk:35, rec:31, secs:7,  tabs:[7,8,9],  easy:-1, weak:["Agua","Cósmico"]},
+    {id:"x6",  hp:470, atk:40, rec:35, secs:7,  tabs:[6,7,8,9], easy:-1, weak:["Hada","Cósmico"]}
   ];
-  const TYPE_FX = {Fuego:"flame",Agua:"bubble",Viento:"wind","Psíquico":"orb",Bicho:"clover","Cósmico":"star",Panal:"honey",Hada:"sparkle",Sombra:"smoke",Acero:"gear",Planta:"leaf",Hielo:"snow",Tierra:"rock","Música":"note",Rayo:"bolt","Dragón":"flame"};
+  const DIFF = {1:1, 2:1.5, 10:1.5, 5:2, 3:3, 4:3, 9:4, 6:4.5, 7:5, 8:5};
+  const SMUL = [1, 1.6, 2.4];
+  const XPOW = {x7:2, x8:3, x9:4, x10:5, x4:6, x11:7, x12:8, x5:9, x13:10, x6:11};
+  const powerOf = (t,k) => Math.round((isX(t) ? XPOW[t] : DIFF[t]*SMUL[k-1])*10)/10;
+  const lvlTxt = P => Math.max(1, Math.round(P));
+  const dmgOf = (t,k,pi) => Math.round(3 + powerOf(t,k)*1.8*(.8 + BASE[t][pi===0 ? 0 : 2]/10));
+  const TYPE_FX = {Fuego:"flame",Agua:"bubble",Viento:"wind","Psíquico":"orb",Bicho:"clover","Cósmico":"star",Panal:"honey",Hada:"sparkle",Sombra:"smoke",Acero:"gear",Planta:"leaf",Hielo:"snow",Tierra:"rock","Música":"note",Rayo:"bolt","Dragón":"flame",Mar:"bubble",Noche:"moon",Niebla:"smoke"};
   const SWORDS = '<svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l18 18M6 6h7M6 6v7M34 6L16 24M34 6h-7M34 6v7M12 28l-4 4M28 28l4 4M20 24l-6 6M20 24l6 6"/></svg>';
   let B = null;
   const mainOwned = () => ownedList();
@@ -2296,7 +2404,7 @@ body.night .spark{opacity:.9}
   const rivalOpen = i => i === 0 || !!(S.x && S.x[RIVALS[i-1].id]);
   const mulOf = (t,k) => isX(t) ? 1.5 : [1,1.5,2][k-1];
   const statOf = (t,k,i) => Math.min(10, Math.round(BASE[t][i]*mulOf(t,k)));
-  const maxHpOf = (t,k) => 30 + (isX(t) ? 16 : 8*k) + (BASE[t][0]+BASE[t][1]+BASE[t][2])*2;
+  const maxHpOf = (t,k) => Math.round(20 + powerOf(t,k)*8);
   const powersOf = (t,k) => isX(t) ? POWERS_X[t] : POWERS[t][k-1];
   const learned = () => { const L = []; for(let t=1;t<=10;t++) if(S.t[t].s[0] > 0) L.push(t); return L.length ? L : [2,5,10]; };
   const tableFor = t => isX(t) ? learned()[Math.random()*learned().length|0] : t;
@@ -2311,13 +2419,15 @@ body.night .spark{opacity:.9}
   function renderArena(){
     stopBattle();
     $("bHub").hidden = false; $("bTeam").hidden = true; $("bFight").hidden = true;
-    $("bMedals").textContent = `Medallas: ${S.medals || 0}`;
+    S.medals = RIVALS.filter(r => S.x && S.x[r.id]).length;
+    $("bMedals").textContent = `Medallas: ${S.medals} de ${RIVALS.length}`;
     $("bRivals").innerHTML = RIVALS.map((r,i) => {
       const open = rivalOpen(i), won = !!(S.x && S.x[r.id]), nm = MASCOT[r.id].names[0];
       return `<button class="sticker rival${open?'':' locked'}${won?' won':''}" data-rival="${i}" ${open?'':'disabled'} style="${shades(r.id)}">
-        <span class="rv-lvl">Rival ${i+1}${i===5?' · Jefe final':''}</span>
+        <span class="rv-lvl">Rival ${i+1}${i===RIVALS.length-1?' · Jefe final':''}</span>
         <span class="rv-img">${mascot(r.id,"idle","",1)}</span>
         <b>${nm}</b>${typeChip(r.id)}
+        <span class="rv-rec">❤ ${r.hp} de vida · Poder sugerido: ${r.rec}</span><span class="rv-tabs">Tablas: ${r.tabs.slice(0,-1).join(", ")} y ${r.tabs[r.tabs.length-1]}</span>
         <span class="rv-state">${won ? '✓ ¡Ya es tuyo!' : open ? '¡Desafiar!' : 'Bloqueado'}</span>
       </button>`;
     }).join("");
@@ -2327,16 +2437,19 @@ body.night .spark{opacity:.9}
     const r = RIVALS[i]; B = {ri:i, pick:[]};
     $("bHub").hidden = true; $("bTeam").hidden = false; $("bFight").hidden = true;
     $("bTeamTitle").textContent = `Elegí 3 criaturas contra ${MASCOT[r.id].names[0]}`;
-    $("bTeamHint").innerHTML = `${MASCOT[r.id].names[0]} es tipo ${typeChip(r.id)} · Le ganan: <b>${r.weak.join(", ")}</b>`;
+    $("bTeamHint").innerHTML = `${MASCOT[r.id].names[0]} es tipo ${typeChip(r.id)} · Le ganan: <b>${r.weak.join(", ")}</b> · Cuentas de las tablas ${r.tabs.slice(0,-1).join(", ")} y ${r.tabs[r.tabs.length-1]}`;
     $("bPick").innerHTML = allOwned().map(([t,k]) => {
       const adv = r.weak.includes(MASCOT[t].type);
-      return `<button class="fig got pick" data-pt="${t}" data-pk="${k}" style="${shades(t)}">${adv ? '<span class="adv">¡Ventaja!</span>' : ''}${mascot(t,"idle","",k)}<small>${MASCOT[t].names[k-1]}</small></button>`;
-    }).join("");
+      return { P: powerOf(t,k), html: `<button class="fig got pick" data-pt="${t}" data-pk="${k}" style="${shades(t)}">${adv ? '<span class="adv">¡Ventaja!</span>' : ''}<span class="plvl">Poder ${lvlTxt(powerOf(t,k))}</span>${mascot(t,"idle","",k)}<small>${MASCOT[t].names[k-1]}</small></button>` };
+    }).sort((a,b) => b.P - a.P).map(x => x.html).join("");
     paintSlots(); scrollTo({top:0});
   }
   function paintSlots(){
     $("bSlots").innerHTML = [0,1,2].map(i => { const p = B.pick[i]; return p ? `<span class="slot full" style="${shades(p[0])}">${mascot(p[0],"idle","",p[1])}</span>` : `<span class="slot">?</span>`; }).join("");
     $("bGo").disabled = B.pick.length < 3;
+    const r = RIVALS[B.ri], tot = Math.round(B.pick.reduce((a,[t,k]) => a + powerOf(t,k), 0)*10)/10, ratio = tot / r.rec;
+    const lvl = ratio >= 1.15 ? ["Fácil","ok"] : ratio >= .9 ? ["Parejo","mid"] : ratio >= .65 ? ["Difícil","hard"] : ["Muy difícil","vhard"];
+    $("bMeter").innerHTML = `<div class="pm-row"><span>Poder de tu equipo: <b>${Math.round(tot)}</b></span><span>Recomendado: <b>${r.rec}</b></span></div><div class="pm-bar"><i class="${lvl[1]}" style="width:${Math.min(100, ratio*80)}%"></i><em style="left:80%"></em></div><div class="pm-verdict ${lvl[1]}">${B.pick.length ? `Batalla: ${lvl[0]}` : "Elegí 3 criaturas"}${B.pick.length === 3 && ratio < .65 ? " · Conseguí criaturas más fuertes en tablas más difíciles o evolucioná las que tenés." : ""}</div>`;
     document.querySelectorAll("#bPick .pick").forEach(el => el.classList.toggle("sel", B.pick.some(([t,k]) => String(t)===el.dataset.pt && k === +el.dataset.pk)));
   }
 
@@ -2418,7 +2531,7 @@ body.night .spark{opacity:.9}
   function startBattle(){
     const r = RIVALS[B.ri];
     B.team = B.pick.map(([t,k]) => ({t, k, hp:maxHpOf(t,k), max:maxHpOf(t,k)}));
-    B.cur = 0; B.rival = {id:r.id, hp:r.hp, max:r.hp, atk:r.atk, weak:r.weak}; B.turn = 0; B.lastB = 0; B.busy = false;
+    B.cur = 0; B.rival = {id:r.id, hp:r.hp, max:r.hp, atk:r.atk, weak:r.weak, tabs:r.tabs, easy:r.easy, secs:r.secs, turns:0}; B.turn = 0; B.lastB = 0; B.busy = false;
     $("bHub").hidden = true; $("bTeam").hidden = true; $("bFight").hidden = false;
     bScene(); const me = B.team[0]; bSet("me", me.t, me.k); bSet("foe", r.id, 1); if(BR.foe) BR.foe.root.visible = true; if(BR.me) BR.me.root.visible = true;
     bAnim("me","enter",.7); bAnim("foe","enter",.7);
@@ -2436,25 +2549,27 @@ body.night .spark{opacity:.9}
   function bSay(txt, next, ms=1200){ $("bPanel").innerHTML = `<p class="bmsg">${txt}</p>`; if(next) setTimeout(next, ms); }
   function chooseTurn(){
     const me = B.team[B.cur], P = powersOf(me.t, me.k);
-    const f = statOf(me.t, me.k, 0), m = statOf(me.t, me.k, 2);
+    const d0 = dmgOf(me.t, me.k, 0), d1 = dmgOf(me.t, me.k, 1);
     $("bPanel").innerHTML = `<p class="bmsg">¿Qué poder usa <b>${MASCOT[me.t].names[me.k-1]}</b>?</p>
-      <div class="bpowers">${P.map(([a,b],i) => `<button class="btn bpow" data-bp="${i}" style="${shades(me.t)}"><b>${a}</b><small>${i===0 ? "Fuerza" : "Magia"} ${i===0 ? f : m}</small></button>`).join("")}</div>`;
+      <div class="bpowers">${P.map(([a,b],i) => `<button class="btn bpow" data-bp="${i}" style="${shades(me.t)}"><b>${a}</b><small>${i===0 ? "Fuerza" : "Magia"} · daño ${i===0 ? d0 : d1}</small></button>`).join("")}</div>
+      ${B.team.some((m,i) => i !== B.cur && m.hp > 0) ? `<div class="bswitch"><span>O cambiá de criatura (el rival aprovecha para atacar):</span>${B.team.map((m,i) => i !== B.cur && m.hp > 0 ? `<button class="sw" data-sw="${i}" style="${shades(m.t)}">${mascot(m.t,"idle","",m.k)}<small>${MASCOT[m.t].names[m.k-1]}${B.rival.weak.includes(MASCOT[m.t].type) ? " ★" : ""}</small></button>` : "").join("")}</div>` : ""}`;
   }
-  function makeQ(tab){ let b; do { b = 1 + (Math.random()*10|0); } while(b === B.lastB); B.lastB = b; return {a:tab, b, ans:tab*b}; }
+  function makeQ(tab){ const lo = B.rival.easy < 0 ? 3 : B.rival.easy === 0 ? 2 : 1, hi = B.rival.easy < 0 ? 9 : 10; let b; do { b = lo + (Math.random()*(hi-lo+1)|0); } while(b === B.lastB); B.lastB = b; return Math.random() < .5 ? {a:tab, b, ans:tab*b} : {a:b, b:tab, ans:tab*b}; }
   function askQ(kind, pi){
-    const me = B.team[B.cur], tab = kind === "atk" ? tableFor(me.t) : learned()[Math.random()*learned().length|0];
+    const me = B.team[B.cur], tab = B.rival.tabs[Math.random()*B.rival.tabs.length|0];
     const q = makeQ(tab); B.q = {kind, pi, ...q, t0: performance.now()/1000};
-    const critT = 3 + statOf(me.t, me.k, 1)*.35;
+    const critT = 2 + BASE[me.t][1]*.3;
     B.q.crit = critT;
     const title = kind === "atk" ? `¡${powersOf(me.t,me.k)[pi][0]}! Resolvé para atacar:` : `¡${MASCOT[B.rival.id].names[0]} ataca con ${POWERS_X[B.rival.id][pi][0]}! Respondé para defenderte:`;
     $("bPanel").innerHTML = `<p class="bmsg">${title}</p>
       <div class="bq"><span>${q.a} × ${q.b} =</span><input id="bAns" class="ans" inputmode="numeric" autocomplete="off" maxlength="3" aria-label="Tu respuesta"><button class="btn" id="bOk">${kind === "atk" ? "¡Atacar!" : "¡Defender!"}</button></div>
-      ${kind === "atk" ? `<div class="critbar" title="Respondé antes de que se vacíe para un golpe crítico"><i style="animation-duration:${critT}s"></i><span>Golpe crítico</span></div>` : ""}`;
+      ${kind === "atk" ? `<div class="critbar" title="Respondé antes de que se vacíe para un golpe crítico"><i style="animation-duration:${critT}s"></i><span>Golpe crítico</span></div>` : `<div class="critbar def" title="Tiempo para defenderte"><i style="animation-duration:${B.rival.secs}s"></i><span>Tiempo para defenderte</span></div>`}`;
     const inp = $("bAns"); inp.focus();
     inp.addEventListener("input", () => { inp.value = inp.value.replace(/\D/g,""); });
     inp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); answer(); } });
     $("bOk").addEventListener("click", answer);
     if(kind === "atk"){ bAnim("me","charge",critT); }
+    else { const qq = B.q; setTimeout(() => { if(B && B.q === qq && !B.busy){ B.busy = true; const i2 = $("bAns"); if(i2){ i2.disabled = true; i2.classList.add("bad"); } qq.timeout = true; resolveDefense(false, qq); } }, B.rival.secs*1000); }
   }
   function answer(){
     if(!B || !B.q || B.busy) return;
@@ -2469,9 +2584,8 @@ body.night .spark{opacity:.9}
       sBad(); bFace("me","oops"); bAnim("me","hit",.5);
       bSay(`¡Uy! Era ${q.ans}. El ataque falló.`, rivalTurn, 1500); return;
     }
-    const stat = statOf(me.t, me.k, q.pi === 0 ? 0 : 2);
     const adv = rv.weak.includes(MASCOT[me.t].type);
-    let dmg = 5 + stat*2; if(crit) dmg *= 1.5; if(adv) dmg *= 1.5; dmg = Math.round(dmg);
+    let dmg = dmgOf(me.t, me.k, q.pi); if(crit) dmg *= 1.5; if(adv) dmg *= 1.4; dmg = Math.round(dmg);
     sOk(); bFace("me","joy",1200); bAnim("me","attack",.6);
     setTimeout(() => {
       rv.hp -= dmg; bAnim("foe","hit",.6); bFace("foe","oops",900); bBurst("foe", MASCOT[me.t].type);
@@ -2484,10 +2598,11 @@ body.night .spark{opacity:.9}
   function rivalTurn(){ B.busy = false; const pi = Math.random() < .5 ? 0 : 1; bAnim("foe","charge",.8); askQ("def", pi); }
   function resolveDefense(ok, q){
     const me = B.team[B.cur], rv = B.rival;
-    let dmg = rv.atk + (Math.random()*4|0); if(ok) dmg = Math.max(1, Math.round(dmg*.3));
+    rv.turns++; const strong = rv.turns % 3 === 0;
+    let dmg = Math.round(rv.atk*(.9 + Math.random()*.25)*(strong ? 1.5 : 1)); if(ok) dmg = Math.max(1, Math.round(dmg*.4));
     bAnim("foe","attack",.6); bFace("foe","joy",1000);
     setTimeout(() => {
-      me.hp -= dmg; bBurst("me", MASCOT[rv.id].type);
+      me.hp -= dmg; bBurst("me", MASCOT[rv.id].type); if(strong) bFx("me","¡Ataque fuerte!","tag eff");
       if(ok){ sOk(); bAnim("me","block",.5); bFx("me","¡Bloqueado!","tag good"); bFx("me", `-${dmg}`, "dmg small"); }
       else { sBad(); bAnim("me","hit",.6); bFace("me","oops",900); bFx("me", `-${dmg}`, "dmg"); }
       paintHP();
@@ -2496,12 +2611,12 @@ body.night .spark{opacity:.9}
         const next = B.team.findIndex(m => m.hp > 0);
         if(next < 0) setTimeout(loseBattle, 1800);
         else setTimeout(() => { B.cur = next; const m = B.team[next]; bSet("me", m.t, m.k); BR.me && (BR.me.root.visible = true); bAnim("me","enter",.7); paintHP(); bSay(`¡Adelante, ${MASCOT[m.t].names[m.k-1]}!`, () => { B.busy = false; chooseTurn(); }, 1200); }, 1700);
-      } else setTimeout(() => bSay(ok ? `¡Te defendiste! Solo perdiste ${dmg} puntos.` : `Era ${q.ans}. ¡Te pegó ${dmg} puntos!`, () => { B.busy = false; chooseTurn(); }, 1300), 400);
+      } else setTimeout(() => bSay(ok ? `¡Te defendiste! Solo perdiste ${dmg} puntos.` : q.timeout ? `¡Se acabó el tiempo! Era ${q.ans}. Te pegó ${dmg} puntos.` : `Era ${q.ans}. ¡Te pegó ${dmg} puntos!`, () => { B.busy = false; chooseTurn(); }, 1300), 400);
     }, 330);
   }
   function winBattle(){
     const rv = B.rival, first = !(S.x && S.x[rv.id]);
-    S.x = S.x || {}; S.x[rv.id] = 1; if(first) S.medals = (S.medals||0) + 1; save(); $("bMedals").textContent = `Medallas: ${S.medals || 0}`;
+    S.x = S.x || {}; S.x[rv.id] = 1; S.medals = RIVALS.filter(r => S.x[r.id]).length; save(); $("bMedals").textContent = `Medallas: ${S.medals} de ${RIVALS.length}`;
     bAnim("me","win",1.4); bFace("me","joy",3000); sWin(); confetti(160); fireworks(first ? 6 : 3);
     const nm = MASCOT[rv.id].names[0], last = B.ri === RIVALS.length - 1;
     $("bPanel").innerHTML = `<div class="bend win"><h2>${last && first ? "¡Campeón de la arena!" : "¡Ganaste la batalla!"}</h2>
@@ -2527,6 +2642,7 @@ body.night .spark{opacity:.9}
   $("bGo").addEventListener("click", () => { if(B.pick.length === 3) startBattle(); });
   $("bPanel").addEventListener("click", e => {
     const p = e.target.closest("[data-bp]"); if(p && !B.busy){ askQ("atk", +p.dataset.bp); return; }
+    const w = e.target.closest("[data-sw]"); if(w && !B.busy){ B.busy = true; const i = +w.dataset.sw; bAnim("me","faint",.5); setTimeout(() => { B.cur = i; const m = B.team[i]; bSet("me", m.t, m.k); if(BR.me) BR.me.root.visible = true; bAnim("me","enter",.7); paintHP(); mallet(784,0,.14,.3); bSay(`¡Adelante, ${MASCOT[m.t].names[m.k-1]}!`, rivalTurn, 1100); }, 500); return; }
     const a = e.target.closest("[data-bact]"); if(!a) return;
     if(a.dataset.bact === "album"){ stopBattle(); renderAlbum(); }
     if(a.dataset.bact === "arena") renderArena();
