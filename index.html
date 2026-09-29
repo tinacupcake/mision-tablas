@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Misión Tablas</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#6A4C93">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/icon-192.png">
+<script>
+/* instalar como app (solo en la página publicada) */
+if("serviceWorker" in navigator && location.hostname === "tinacupcake.github.io"){ addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {})); }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800;900&family=Caveat:wght@600;700&display=swap">
@@ -83,6 +91,9 @@ button{font:inherit; color:inherit; cursor:pointer}
 .w-form label{font-family:var(--display); font-size:24px}
 .w-form input{font:inherit; font-family:var(--hand); font-size:36px; font-weight:700; color:var(--ink); border:0; border-bottom:3px dashed var(--ink-soft); background:transparent; padding:2px; width:100%}
 .w-form input:focus{outline:none; border-bottom-style:solid; border-color:var(--c)}
+.w-form a.btn{text-decoration:none}
+#wPreview:empty{display:none}
+.w-nog{margin:0; font-weight:800; color:var(--ink-soft); text-align:center; max-width:32ch}
 .w-err{margin:0; color:var(--bad); font-weight:800; font-size:14px}
 .player label{font-weight:900; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft)}
 .player input{font:inherit; font-family:var(--hand); font-size:30px; font-weight:700; color:var(--ink); border:0; border-bottom:2.5px dashed var(--ink-soft); background:transparent; padding:2px 2px; width:100%}
@@ -739,11 +750,12 @@ body.night .spark{opacity:.9}
       <p class="w-kicker">Bienvenidos a</p>
       <h1 class="w-title" id="wTitle" aria-label="Misión Tablas">Misión Tablas</h1>
       <form class="sticker w-form" id="wForm">
-        <label for="wName">¿Cómo te llamás?</label>
-        <input id="wName" maxlength="28" placeholder="Escribí tu nombre" autocomplete="off">
+        <input id="wName" type="hidden">
         <p class="w-preview" id="wPreview" aria-hidden="true"></p>
-        <button class="btn" type="submit">¡A jugar! →</button>
-        <p class="w-err" id="wErr" hidden>Escribí tu nombre para empezar.</p>
+        <p class="w-nog" id="wNoName" hidden>Para jugar con tu nombre y tu personaje, primero entrá al <b>Valle de los Guardianes</b>.</p>
+        <a class="btn" id="wValle" href="https://tinacupcake.github.io/" hidden>Ir al Valle de los Guardianes</a>
+        <button class="btn" type="submit" id="wGo">¡A jugar! →</button>
+        <p class="w-err" id="wErr" hidden></p>
       </form>
     </section>
   </main>
@@ -758,7 +770,7 @@ body.night .spark{opacity:.9}
       <div class="sticker player">
         <a class="guard" id="guard" href="https://tinacupcake.github.io/#avatar"><span class="guard-img" id="guardImg"></span><span class="guard-txt"><small id="guardTitle">Tu personaje</small><b id="guardName">Armá tu Guardián</b><em id="guardHint">en el Valle de los Guardianes</em></span></a>
         <div class="stats"><span><b id="stDip">0</b>diplomas</span><span><b id="stStars">0</b>estrellas</span></div>
-        <button class="linkish" id="changeName" style="justify-self:start;padding:0">Cambiar de jugador</button>
+        <a class="linkish" id="changeName" href="https://tinacupcake.github.io/" style="justify-self:start;padding:0">Cambiar de jugador (en el Valle)</a>
       </div>
     </section>
     <div class="tables" id="tables"></div>
@@ -3002,6 +3014,10 @@ body.night .spark{opacity:.9}
           case "enter": { const q = Math.min(1,p); sc = .95*(q < .7 ? q/.7*1.12 : 1.12 - (q-.7)/.3*.12); y += Math.sin(q*Math.PI)*.4; break; }
           case "win": y += Math.abs(Math.sin(p*Math.PI*3))*.5; ry += p*Math.PI*2; break;
           case "charge": sc = .95*(1 - Math.sin(Math.min(1,p)*Math.PI)*.1); rz = Math.sin(p*80)*.04; break;
+          case "spinAtk": { const q = Math.min(1,p); x += dir*Math.sin(q*Math.PI)*2.8; ry += dir*q*Math.PI*6; y += Math.sin(q*Math.PI)*.2; break; }
+          case "jumpAtk": { const q = Math.min(1,p); if(q < .55){ const u = q/.55; x += dir*u*3.2; y += Math.sin(u*Math.PI)*2.2; rz = -dir*u*.5; } else { const u = (q-.55)/.45; x += dir*(1-u)*3.2; y += Math.sin(u*Math.PI)*.5; sc = .95*(u < .15 ? 1 - (1-u/.15)*.15 : 1); } break; }
+          case "stomp": { const q = Math.min(1,p); if(q < .4) y += Math.sin(q/.4*Math.PI)*1.3; else sc = .95*(1 - Math.max(0, 1 - (q-.4)/.2)*.15); break; }
+          case "cast": { const q = Math.min(1,p); y += Math.sin(q*Math.PI)*.35; sc = .95*(1 + Math.sin(q*Math.PI)*.1); ry += dir*Math.sin(q*Math.PI*2)*.25; break; }
         }
       }
       c.root.position.set(x, y, 0); c.root.rotation.set(0, ry, rz); c.root.scale.setScalar(Math.max(.01, sc));
@@ -3015,6 +3031,8 @@ body.night .spark{opacity:.9}
       c.anim.flick.forEach(o => o.scale.y = o.userData.sy*(1 + Math.sin(time*11 + o.id)*.08));
       c.anim.bob.forEach(o => o.position.y = o.userData.y0 + Math.sin(time*1.5 + o.userData.ph)*.1);
     });
+    for(let i=BR.fx.length-1;i>=0;i--){ const f = BR.fx[i], p = (time - f.t0)/f.dur; if(p < 0) continue; if(p >= 1){ BR.sc.remove(f.obj); BR.fx.splice(i,1); continue; } f.obj.visible = true; f.update(p, f.obj); }
+    if(BR.shake){ const p = (time - BR.shake.t0)/BR.shake.dur; if(p >= 1){ BR.shake = null; BR.cam.position.set(0, 1.5, 11.5); } else { const a = BR.shake.amp*(1-p); BR.cam.position.set((Math.random()-.5)*a, 1.5 + (Math.random()-.5)*a, 11.5); } }
     BR.r.render(BR.sc, BR.cam);
   }
   function bFx(side, html, cls){
@@ -3025,6 +3043,81 @@ body.night .spark{opacity:.9}
     const ov = $("bFx"), ic = ICON[TYPE_FX[type] || "star"] || ICON.star;
     for(let i=0;i<8;i++){ const a = i/8*Math.PI*2; const sp = document.createElement("span"); sp.className = "fxp burst"; sp.innerHTML = ic; sp.style.left = (side === "me" ? 26 : 74) + "%"; sp.style.top = "52%"; sp.style.setProperty("--bx", Math.cos(a)*80 + "px"); sp.style.setProperty("--by", Math.sin(a)*65 + "px"); ov.appendChild(sp); setTimeout(() => sp.remove(), 1200); }
   }
+
+  /* ---------- animaciones de ataque según el poder ---------- */
+  const ATK_STYLES = [
+    ["lluvia", ["lluvia","granizo","meteor","polvo","espolvorea","fugaz","nevada","cometa de"]],
+    ["terremoto", ["terremoto","temblor","erupci","sacud","pisot"]],
+    ["tornado", ["remolino","huracán","huracan","tornado","torbellino","ventarr","viento","tormenta"]],
+    ["rayo", ["rayo","láser","laser","destello","mirada","visión","vision","escáner","escaner","trueno","relámpago","relampago","mental","luz","núcleo","nucleo","ilumina","cristal"]],
+    ["onda", ["zumbido","ronroneo","oído","oido","canto","melod","grito","eco","abrazo","onda","sonido","nota","música","musica","acorde","rugido"]],
+    ["hechizo", ["hechizo","deseo","suerte","sueño","dorm","polen","espíritu","espiritu","orbe","magia","levita","brillo","arco","pinta","colores","aurora","prisma"]],
+    ["salto", ["salto","cae parado","aplast","ancla","fuerza","puño","puno","cuernazo","golpe","lanza real","coraza"]],
+    ["giro", ["rodada","rueda","bolita","bola de","giro","galope","vuelo","aleteo","propulsión","propulsion","planea","cola de"]],
+    ["proyectil", ["bola","chispa","llama","tinta","burbuja","pincho","aguij","espora","gota","disparo","tiro","tridente","dardo","fuego","aliento","látigo","latigo","raíz","raiz","miel","hoja"]]
+  ];
+  function atkStyle(name, pi){
+    const n = (name || "").toLowerCase();
+    for(const [st, keys] of ATK_STYLES) if(keys.some(k => n.includes(k))) return st;
+    return pi === 0 ? "embestida" : "proyectil";
+  }
+  BR.fx = [];
+  function fxAdd(obj, dur, update, delay=0){ const t0 = performance.now()/1000 + delay; obj.visible = false; BR.sc.add(obj); BR.fx.push({obj, t0, dur, update}); }
+  function fxMat(hex, op=.95){ return new T3.MeshBasicMaterial({color:new T3.Color(hex), transparent:true, opacity:op, depthWrite:false}); }
+  function fxRing(x, y, hex, big=1, delay=0){
+    const {PLANE} = g3(); const m = new T3.Mesh(new T3.RingGeometry(.6, .85, 32), fxMat(hex, .8));
+    fxAdd(m, .5, (p, o) => { o.position.set(x, y, .6); const k = (.4 + p*1.8)*big; o.scale.set(k, k, 1); o.material.opacity = .8*(1-p); }, delay);
+  }
+  // hace el ataque de "side" con su poder pi; llama a onHit en el momento del impacto
+  function playAttack(side, t, k, pi, name, onHit){
+    const st = HAS3D ? atkStyle(name, pi) : "embestida";
+    const dir = side === "me" ? 1 : -1, ax = -2.2*dir, tx = 2.2*dir, ty = .15;
+    const col = MASCOT[t].tc || COLORS[t], lt = mixHex(col, "#ffffff", .5);
+    const {SPH, OCT, CONE, CYL, PLANE, glowMat} = g3();
+    let hitAt = .33;
+    const other = side === "me" ? "foe" : "me";
+    const glow = (x, y, s, delay, dur) => { const g = new T3.Mesh(PLANE, glowMat); fxAdd(g, dur, (p, o) => { o.position.set(x, y, .5); o.scale.setScalar(s*(1 + Math.sin(p*Math.PI)*.4)); }, delay); };
+    bFx(side, name, "tag");
+    switch(st){
+      case "embestida": bAnim(side, "attack", .6); hitAt = .33; break;
+      case "giro": bAnim(side, "spinAtk", .75); hitAt = .38; for(let i=0;i<6;i++){ const m = new T3.Mesh(SPH, fxMat(lt, .7)); fxAdd(m, .35, (p, o) => { o.position.set(ax + dir*(.3 + i*.4), -1.1 + Math.random()*.1, .3); o.scale.setScalar(.18*(1-p)); }, .05*i); } break;
+      case "salto": bAnim(side, "jumpAtk", .9); hitAt = .5; fxRing(tx, -1.35, col, 1.4, .5); fxRing(tx, -1.35, lt, 1, .58); setTimeout(() => shake(.35, .12), 500); break;
+      case "terremoto": bAnim(side, "stomp", .8); hitAt = .45; setTimeout(() => shake(.7, .22), 330);
+        for(let i=0;i<7;i++){ const m = new T3.Mesh(OCT, g3().M("#A58A6B")); const ox = tx + (Math.random()-.5)*2.2, oz = (Math.random()-.5)*1.2; fxAdd(m, .8, (p, o) => { o.position.set(ox, -1.45 + Math.sin(p*Math.PI)*(.8 + (i%3)*.3), oz); o.scale.setScalar(.22 + (i%3)*.06); o.rotation.set(p*6, p*4, 0); }, .33 + i*.03); }
+        fxRing(ax, -1.35, "#A58A6B", 1.2, .33); break;
+      case "proyectil": { bAnim(side, "cast", .7); hitAt = .62; const n = /ráfaga|pincho|espora|gota|granito/i.test(name) ? 3 : 1;
+        for(let i=0;i<n;i++){ const b = new T3.Mesh(SPH, fxMat(col, 1)); const d = .2 + i*.1;
+          fxAdd(b, .42, (p, o) => { o.position.set(ax + (tx - ax)*p, .35 + Math.sin(p*Math.PI)*.9 + (i-1)*.15, .5); o.scale.setScalar(.26 - i*.03); }, d);
+          const c = new T3.Mesh(SPH, fxMat("#FFFFFF", 1)); fxAdd(c, .42, (p, o) => { o.position.set(ax + (tx - ax)*p, .35 + Math.sin(p*Math.PI)*.9 + (i-1)*.15, .62); o.scale.setScalar(.12); }, d);
+          for(let j=1;j<5;j++){ const tr = new T3.Mesh(SPH, fxMat(lt, .6)); fxAdd(tr, .42, (p, o) => { const q = Math.max(0, p - j*.07); o.position.set(ax + (tx - ax)*q, .35 + Math.sin(q*Math.PI)*.9 + (i-1)*.15, .45); o.scale.setScalar(.18 - j*.03); }, d); } }
+        fxRing(tx, ty, col, 1, .62); break; }
+      case "rayo": { bAnim(side, "cast", .9); hitAt = .35; glow(ax + dir*.5, .3, 1.2, 0, .9);
+        const beam = new T3.Mesh(CYL, fxMat(col, .85)), core = new T3.Mesh(CYL, fxMat("#FFFFFF", .95));
+        [beam, core].forEach((m, i) => fxAdd(m, .65, (p, o) => { const L = Math.min(1, p/.25)*Math.abs(tx - ax - dir*.6); o.rotation.z = Math.PI/2; o.position.set(ax + dir*.6 + dir*L/2, .3, .5 + i*.05); const th = (i ? .06 : .16)*(1 + Math.sin(p*40)*.25)*(p > .8 ? (1-p)/.2 : 1); o.scale.set(th, L || .01, th); }, .15));
+        fxRing(tx, .3, col, 1.2, .35); fxRing(tx, .3, "#FFFFFF", .8, .45); break; }
+      case "lluvia": { bAnim(side, "cast", 1); hitAt = .75;
+        const piece = /granizo|nieve|hielo/i.test(name) ? [OCT, "#BFE8FF"] : /meteor|erupci|lava|fuego/i.test(name) ? [SPH, "#FF6B2C"] : [OCT, "#FFD84D"];
+        for(let i=0;i<10;i++){ const m = new T3.Mesh(piece[0], i%2 ? g3().M(piece[1], {emissive:piece[1], emissiveIntensity:.5}) : fxMat(lt, 1)); const ox = tx + (Math.random()-.5)*1.8, oz = (Math.random()-.5)*.8;
+          fxAdd(m, .45, (p, o) => { o.position.set(ox - dir*(1-p)*.8, 4.2 - p*4.3, oz + .3); o.scale.setScalar(.2); o.rotation.set(p*8, p*5, 0); }, .35 + i*.06); }
+        glow(tx, 3.4, 2.2, .2, 1.1); break; }
+      case "tornado": { bAnim(side, "cast", 1); hitAt = .7;
+        for(let i=0;i<4;i++){ const r = new T3.Mesh(new T3.TorusGeometry(1, .13, 8, 28), fxMat(i%2 ? lt : col, .85)); fxAdd(r, 1.0, (p, o) => { o.position.set(tx, -1.2 + i*.55 + p*.4, 0); o.rotation.set(Math.PI/2, 0, p*20 + i); const k = (.45 + i*.22)*(p < .15 ? p/.15 : p > .85 ? (1-p)/.15 : 1); o.scale.set(k, k, 1); }, .25); }
+        for(let i=0;i<8;i++){ const m = new T3.Mesh(SPH, fxMat("#FFFFFF", .8)); fxAdd(m, 1.0, (p, o) => { const a = p*14 + i; o.position.set(tx + Math.cos(a)*(.5 + i*.08), -1 + i*.3, Math.sin(a)*(.5 + i*.08)); o.scale.setScalar(.07); }, .25); }
+        break; }
+      case "onda": { bAnim(side, "cast", .9); hitAt = .6;
+        for(let i=0;i<3;i++){ const r = new T3.Mesh(new T3.TorusGeometry(1, .06, 6, 28), fxMat(i%2 ? lt : col, .85)); fxAdd(r, .55, (p, o) => { o.position.set(ax + (tx - ax)*p, .25, .3); o.rotation.set(0, Math.PI/2, 0); const k = .3 + p*1.1; o.scale.set(k, k, 1); o.material.opacity = .85*(1 - p*.6); }, .12 + i*.13); }
+        if(/ronroneo|sueño|dorm/i.test(name)) setTimeout(() => bFace(other, "sleep", 1400), 700);
+        break; }
+      case "hechizo": { bAnim(side, "cast", 1.1); hitAt = .85; glow(ax, .4, 1.5, 0, 1.1);
+        for(let i=0;i<9;i++){ const m = new T3.Mesh(OCT, g3().M(i%3 ? col : "#FFD84D", {emissive:i%3 ? col : "#FFB703", emissiveIntensity:.6})); fxAdd(m, .9, (p, o) => { const a = i/9*Math.PI*2 + p*7, r = 1.4*(1 - p*.85); o.position.set(tx + Math.cos(a)*r, .2 + Math.sin(a*1.3)*.5*(1-p), Math.sin(a)*r*.6 + .4); o.scale.set(.09, .16, .09); o.rotation.y = p*10; }, .15); }
+        fxRing(tx, .2, "#FFD84D", 1.3, .85);
+        if(/sueño|dorm|polen|ronroneo/i.test(name)) setTimeout(() => bFace(other, "sleep", 1500), 950);
+        break; }
+    }
+    setTimeout(onHit, hitAt*1000);
+    return st;
+  }
+  function shake(dur, amp){ BR.shake = {t0:performance.now()/1000, dur, amp}; }
 
   /* ---------- lógica de la batalla ---------- */
   function startBattle(){
@@ -3085,22 +3178,23 @@ body.night .spark{opacity:.9}
     }
     const adv = rv.weak.includes(MASCOT[me.t].type);
     let dmg = dmgOf(me.t, me.k, q.pi); if(crit) dmg *= 1.5; if(adv) dmg *= 1.4; dmg = Math.round(dmg);
-    sOk(); bFace("me","joy",1200); bAnim("me","attack",.6);
-    setTimeout(() => {
+    sOk(); bFace("me","joy",1200);
+    playAttack("me", me.t, me.k, q.pi, powersOf(me.t,me.k)[q.pi][0], () => {
       rv.hp -= dmg; bAnim("foe","hit",.6); bFace("foe","oops",900); bBurst("foe", MASCOT[me.t].type);
       bFx("foe", `-${dmg}`, "dmg"); if(crit) setTimeout(() => bFx("foe","¡Crítico!","tag"), 150); if(adv) setTimeout(() => bFx("foe","¡Muy efectivo!","tag eff"), 350);
       mallet(196,0,.2,.3); paintHP();
       if(rv.hp <= 0){ setTimeout(() => { bAnim("foe","faint",1.1); bFace("foe","sleep",5000); mallet(330,0,.2,.5); mallet(262,.2,.2,.8); }, 500); setTimeout(winBattle, 1800); }
       else setTimeout(() => bSay(`¡${powersOf(me.t,me.k)[q.pi][0]} le sacó ${dmg} puntos!`, rivalTurn, 1200), 500);
-    }, 330);
+    });
   }
   function rivalTurn(){ B.busy = false; const pi = Math.random() < .5 ? 0 : 1; bAnim("foe","charge",.8); askQ("def", pi); }
   function resolveDefense(ok, q){
     const me = B.team[B.cur], rv = B.rival;
     rv.turns++; const strong = rv.turns % 3 === 0;
     let dmg = Math.round(rv.atk*(.9 + Math.random()*.25)*(strong ? 1.5 : 1)); if(ok) dmg = Math.max(1, Math.round(dmg*.4));
-    bAnim("foe","attack",.6); bFace("foe","joy",1000);
-    setTimeout(() => {
+    bFace("foe","joy",1000);
+    const rp = powersOf(rv.id, 1), rpi = q.pi != null && rp[q.pi] ? q.pi : 0;
+    playAttack("foe", rv.id, 1, rpi, rp[rpi][0], () => {
       me.hp -= dmg; bBurst("me", MASCOT[rv.id].type); if(strong) bFx("me","¡Ataque fuerte!","tag eff");
       if(ok){ sOk(); bAnim("me","block",.5); bFx("me","¡Bloqueado!","tag good"); bFx("me", `-${dmg}`, "dmg small"); }
       else { sBad(); bAnim("me","hit",.6); bFace("me","oops",900); bFx("me", `-${dmg}`, "dmg"); }
@@ -3111,7 +3205,7 @@ body.night .spark{opacity:.9}
         if(next < 0) setTimeout(loseBattle, 1800);
         else setTimeout(() => { B.cur = next; const m = B.team[next]; bSet("me", m.t, m.k); BR.me && (BR.me.root.visible = true); bAnim("me","enter",.7); paintHP(); bSay(`¡Adelante, ${MASCOT[m.t].names[m.k-1]}!`, () => { B.busy = false; chooseTurn(); }, 1200); }, 1700);
       } else setTimeout(() => bSay(ok ? `¡Te defendiste! Solo perdiste ${dmg} puntos.` : q.timeout ? `¡Se acabó el tiempo! Era ${q.ans}. Te pegó ${dmg} puntos.` : `Era ${q.ans}. ¡Te pegó ${dmg} puntos!`, () => { B.busy = false; chooseTurn(); }, 1300), 400);
-    }, 330);
+    });
   }
   function winBattle(){
     const rv = B.rival, first = !(S.x && S.x[rv.id]);
@@ -3188,18 +3282,19 @@ body.night .spark{opacity:.9}
   $("wName").addEventListener("input", paintPreview);
   let showT = null;
   function renderWelcome(){
-    $("wName").value = S.name || ""; prevName=""; paintPreview(); $("wErr").hidden = true; show("vWelcome"); setTimeout(()=>$("wName").focus(), 50);
+    $("wName").value = S.name || ""; prevName=""; paintPreview(); $("wErr").hidden = true; show("vWelcome");
+    const has = !!(S.name || "").trim();
+    $("wNoName").hidden = has; $("wValle").hidden = has; $("wGo").textContent = has ? "¡A jugar! →" : "Jugar sin personaje";
+    $("wGo").classList.toggle("ghost", !has); setTimeout(() => (has ? $("wGo") : $("wValle")).focus(), 50);
     if(HAS3D){
       let k = 1; live($("w3d"), k, 0); LV.hero = true; setColor(document.body, k); clearInterval(showT);
       showT = setInterval(() => { if($("vWelcome").hidden){ clearInterval(showT); return; } k = k % 10 + 1; setColor(document.body, k); liveSet(k, 0, "idle"); }, 3200);
     }
   }
   $("wForm").addEventListener("submit", e => {
-    e.preventDefault(); const n = $("wName").value.trim();
-    if(!n){ $("wErr").hidden = false; $("wName").focus(); return; }
-    S.name = n; save(); try{ const m = JSON.parse(localStorage.getItem("mundoCriaturas.v1") || "{}"); m.name = n; localStorage.setItem("mundoCriaturas.v1", JSON.stringify(m)); }catch(_){} sOk(); renderHome();
+    e.preventDefault();
+    save(); sOk(); renderHome();
   });
-  $("changeName").addEventListener("click", renderWelcome);
   $("teacher").addEventListener("change", e => { TEACH_OPEN = e.target.checked; });
   const checkTeacher = () => { if(location.hash.replace("#","").toLowerCase() === "docente"){ TEACHER = true; TEACH_OPEN = true; } if(!$("vHome").hidden) renderHome(); };
   addEventListener("hashchange", checkTeacher); checkTeacher();
