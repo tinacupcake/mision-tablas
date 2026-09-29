@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Misión Tablas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2556,10 +2556,10 @@ body.night .spark{opacity:.9}
       <div class="bpowers">${P.map(([a,b],i) => `<button class="btn bpow" data-bp="${i}" style="${shades(me.t)}"><b>${a}</b><small>${i===0 ? "Fuerza" : "Magia"} · daño ${i===0 ? d0 : d1}</small></button>`).join("")}</div>
       ${B.team.some((m,i) => i !== B.cur && m.hp > 0) ? `<div class="bswitch"><span>O cambiá de criatura (el rival aprovecha para atacar):</span>${B.team.map((m,i) => i !== B.cur && m.hp > 0 ? `<button class="sw" data-sw="${i}" style="${shades(m.t)}">${mascot(m.t,"idle","",m.k)}<small>${MASCOT[m.t].names[m.k-1]}${B.rival.weak.includes(MASCOT[m.t].type) ? " ★" : ""}</small></button>` : "").join("")}</div>` : ""}`;
   }
-  function makeQ(tab){ const lo = B.rival.easy < 0 ? 3 : B.rival.easy === 0 ? 2 : 1, hi = B.rival.easy < 0 ? 9 : 10; let b; do { b = lo + (Math.random()*(hi-lo+1)|0); } while(b === B.lastB); B.lastB = b; return Math.random() < .5 ? {a:tab, b, ans:tab*b} : {a:b, b:tab, ans:tab*b}; }
+  function bMakeQ(tab){ const lo = B.rival.easy < 0 ? 3 : B.rival.easy === 0 ? 2 : 1, hi = B.rival.easy < 0 ? 9 : 10; let b; do { b = lo + (Math.random()*(hi-lo+1)|0); } while(b === B.lastB); B.lastB = b; return Math.random() < .5 ? {a:tab, b, ans:tab*b} : {a:b, b:tab, ans:tab*b}; }
   function askQ(kind, pi){
     const me = B.team[B.cur], tab = B.rival.tabs[Math.random()*B.rival.tabs.length|0];
-    const q = makeQ(tab); B.q = {kind, pi, ...q, t0: performance.now()/1000};
+    const q = bMakeQ(tab); B.q = {kind, pi, ...q, t0: performance.now()/1000};
     const critT = 2 + BASE[me.t][1]*.3;
     B.q.crit = critT;
     const title = kind === "atk" ? `¡${powersOf(me.t,me.k)[pi][0]}! Resolvé para atacar:` : `¡${MASCOT[B.rival.id].names[0]} ataca con ${POWERS_X[B.rival.id][pi][0]}! Respondé para defenderte:`;
